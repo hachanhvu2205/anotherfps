@@ -34,7 +34,7 @@ namespace Source.Input
                     ""type"": ""Value"",
                     ""id"": ""bc6749a1-5035-48ce-ab39-540ee3c39249"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""StickDeadzone,NormalizeVector2"",
+                    ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
