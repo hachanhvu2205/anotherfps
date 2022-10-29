@@ -4,12 +4,6 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-	private void Awake()
-    {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
     private void RestartGame(float time)
     {
         StartCoroutine(RestartTimer(time));

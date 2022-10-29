@@ -42,6 +42,8 @@ public class HudControl : MonoBehaviour
         Player.AmmoUpdate += UpdatePlayerAmmo;
         Player.ItemUpdate += UpdatePlayerItems;
         Player.PauseEvent += PauseMenu;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void PauseMenu(bool pause)

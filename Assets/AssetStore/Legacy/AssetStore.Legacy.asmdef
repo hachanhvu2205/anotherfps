@@ -1,0 +1,16 @@
+{
+    "name": "AssetStore.Legacy",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6d4171a3ff2d0494495be8149694fd87"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

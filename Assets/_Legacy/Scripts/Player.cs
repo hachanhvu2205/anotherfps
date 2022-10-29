@@ -154,7 +154,7 @@ public class Player : MonoBehaviour
             walkTime += Time.deltaTime;
 
             if (Input.GetButtonDown("Jump"))
-                moveDirection.y = jumpSpeed;            
+                moveDirection.y = jumpSpeed;
         }
 
         moveDirection.y -= gravity * Time.deltaTime;
@@ -174,7 +174,7 @@ public class Player : MonoBehaviour
                 source.pitch = Random.Range(0.8f, 1.2f);
                 source.PlayOneShot(shootSound);
                 curAmmo--;
-                AmmoUpdate(curAmmo);
+                AmmoUpdate?.Invoke(curAmmo);
                 camRotation.x -= 2;
                 GameObject gunFlare = Instantiate(feedbackPrefab, bulletOrigin.position, Quaternion.identity) as GameObject;
                 gunFlare.transform.SetParent(bulletOrigin);
@@ -187,7 +187,9 @@ public class Player : MonoBehaviour
                 if (Physics.Raycast(ray, out hit, shootRange))
                 {
                     hit.collider.SendMessage("TakeDamage", SendMessageOptions.DontRequireReceiver);
-                    GameObject hitFlare = Instantiate(feedbackPrefab, hit.point, Quaternion.identity) as GameObject;
+                    var reducedNormal = hit.normal;
+                    reducedNormal.Scale(new Vector3(.1f, .1f, .1f));
+                    GameObject hitFlare = Instantiate(feedbackPrefab, hit.point + reducedNormal, Quaternion.identity) as GameObject;
                     Destroy(hitFlare, 0.2f);
                 }
             }
@@ -223,7 +225,7 @@ public class Player : MonoBehaviour
         }
         source.pitch = Random.Range(0.8f, 1.2f);
         source.PlayOneShot(hitSound);
-        HealthUpdate(curHealth);
+        HealthUpdate?.Invoke(curHealth);
     }
 
     /// <summary>
@@ -240,7 +242,7 @@ public class Player : MonoBehaviour
 
         source.pitch = Random.Range(0.8f, 1.2f);
         source.PlayOneShot(pickHealthSound);
-        HealthUpdate(curHealth);
+        HealthUpdate?.Invoke(curHealth);
     }
 
     /// <summary>
@@ -255,7 +257,7 @@ public class Player : MonoBehaviour
 
         source.pitch = Random.Range(0.8f, 1.2f);
         source.PlayOneShot(pickAmmoSound);
-        AmmoUpdate(curAmmo);
+        AmmoUpdate?.Invoke(curAmmo);
     }
 
     /// <summary>
