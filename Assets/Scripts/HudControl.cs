@@ -26,6 +26,10 @@ public class HudControl : MonoBehaviour
     {
         get { return transform.Find("Pause").gameObject; }
     }
+    private GameObject deathMenu
+    {
+        get { return transform.Find("Death").gameObject; }
+    }
     private Text ammoCur
     {
         get { return ammo.Find("Cur").GetComponent<Text>(); }
@@ -35,6 +39,8 @@ public class HudControl : MonoBehaviour
         get { return module.Find("Health").GetComponent<Slider>(); }
     }
 
+    Player player;
+
     private void Awake()
     {
         ammo.Find("Total").GetComponent<Text>().text = Player.maxAmmo.ToString();
@@ -42,6 +48,12 @@ public class HudControl : MonoBehaviour
         Player.AmmoUpdate += UpdatePlayerAmmo;
         Player.ItemUpdate += UpdatePlayerItems;
         Player.PauseEvent += PauseMenu;
+        Player.DeathEvent += DeathMenu;
+    }
+
+    private void DisplayItemModule(bool display)
+    {
+        itemModule.gameObject.SetActive(display);
     }
 
     private void PauseMenu(bool pause)
@@ -64,6 +76,25 @@ public class HudControl : MonoBehaviour
         
     }
 
+    private void DeathMenu(bool death)
+    {
+        if (death)
+        {
+            Time.timeScale = 0;
+            muted.TransitionTo(0);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;  
+        }
+        else
+        {
+            Time.timeScale = 1;
+            normal.TransitionTo(0);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        deathMenu.SetActive(death);
+    }
+
     private void UpdatePlayerItems(string itemName)
     {
         itemModule.Find(itemName).GetComponent<Toggle>().isOn = true;
@@ -78,5 +109,17 @@ public class HudControl : MonoBehaviour
     {
         float percentage = (float)curHealth / Player.maxHealth;
         health.value = percentage;
+    }
+
+    public void Retry() {
+        player = GameObject.Find("Player").GetComponent<Player>();
+        player.Respawn();
+        DeathMenu(false);
+    }
+
+    public void Quit() {
+        FindObjectOfType<GameManager>().SendMessage("RestartGame", 0.1);
+        Time.timeScale = 1;
+        Destroy(player.gameObject);
     }
 }

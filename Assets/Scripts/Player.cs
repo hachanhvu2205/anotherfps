@@ -54,6 +54,9 @@ public class Player : MonoBehaviour
     public delegate void PauseHandler(bool pause);
     public static event PauseHandler PauseEvent;
 
+    public delegate void DeathHandler(bool dead);
+    public static event DeathHandler DeathEvent;
+
     // Customizeable Variables
     public GameObject riflePrefab;
     public GameObject feedbackPrefab;
@@ -217,9 +220,11 @@ public class Player : MonoBehaviour
         curHealth -= amount;        
         if (curHealth <= 0)
         {
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
-            curHealth = maxHealth;
+            
+            // transform.position = spawnPoint.position;
+            // transform.rotation = spawnPoint.rotation;
+            // curHealth = maxHealth;
+            DeathEvent(true);
         }
         source.pitch = Random.Range(0.8f, 1.2f);
         source.PlayOneShot(hitSound);
@@ -303,5 +308,12 @@ public class Player : MonoBehaviour
                 ItemUpdate(itemName);
                 break;
         }
+    }
+
+    public void Respawn() {
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+        curHealth = maxHealth;
+        DeathEvent(false);
     }
 }
