@@ -96,14 +96,15 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Shoot();
-        Rotate();
-        Move();
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             paused = Time.timeScale > 0 ? true : false;
             PauseEvent(paused);
         }
+        if (paused || DialogueManager.DialogueIsOpen) return;
+        Shoot();
+        Rotate();
+        Move();
         #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Bypass();
         #endif
