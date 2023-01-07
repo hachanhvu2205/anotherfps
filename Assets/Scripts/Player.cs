@@ -255,6 +255,7 @@ public class Player : MonoBehaviour
     /// <param name="amount">The amount of ammo to pick</param>
     private void TakeAmmo(int amount)
     {
+        Debug.Log("Got " + ammoAmount + " Ammo");
         curAmmo += amount;
         if (curAmmo > _maxAmmo)
             curAmmo = _maxAmmo;
@@ -269,6 +270,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void GetRifle()
     {
+        Debug.Log("Got Rifle");
         source.pitch = Random.Range(0.8f, 1.2f);
         source.PlayOneShot(pickAmmoSound);
         GameObject rifle = Instantiate(riflePrefab, weaponSlot.position, Quaternion.identity) as GameObject;
@@ -286,6 +288,7 @@ public class Player : MonoBehaviour
     /// <param name="itemName">The item to get</param>
     private void GetItem(string itemName)
     {
+        Debug.Log("Got " + itemName);
         switch (itemName)
         {
             case "Key":
