@@ -8,5 +8,5 @@ public class Sentence : MonoBehaviour
     [SerializeField] public string speakerName;
     [SerializeField] public string sentence;
 
-    [SerializeField] public string[] choices;
+    public Choice choice;
 }

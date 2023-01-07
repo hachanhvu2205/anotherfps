@@ -12,7 +12,7 @@ public class DialogueManager : MonoBehaviour
 
     public static bool DialogueIsOpen = false;
     private bool choiceActive = false;
-    private int choice;
+    private string currentChoiceContext;
     public Animator animator;
 
     private Queue<Sentence> sentences;
@@ -63,17 +63,19 @@ public class DialogueManager : MonoBehaviour
         StopAllCoroutines();
         nameText.text = sentence.speakerName;
         StartCoroutine(TypeSentence(sentence.sentence));
-        if(sentence.choices.Length > 0)
+        if(!ReferenceEquals(sentence.choice, null) && sentence.choice.choices.Length > 0 && sentence.choice.choices.Length <= 3)
         {
+            Debug.Log("choiceContext: " + sentence.choice.choiceContext);
             TextMeshProUGUI[] choicesText = choiceBox.GetComponentsInChildren<TextMeshProUGUI>();
-            for (int i = 0; i < sentence.choices.Length; i++)
+            for (int i = 0; i < sentence.choice.choices.Length; i++)
             {
-                Debug.Log("choice: " + sentence.choices[i]);
-                choicesText[i].text = sentence.choices[i];
+                Debug.Log("choice: " + sentence.choice.choices[i]);
+                choicesText[i].text = sentence.choice.choices[i];
                 choicesText[i].transform.parent.gameObject.SetActive(true);
             }
             choiceActive = true;
             choiceBox.SetActive(true);
+            currentChoiceContext = sentence.choice.choiceContext;
         }
         Debug.Log("sentence: " + sentence.speakerName + ": " + sentence.sentence);
     }
@@ -106,10 +108,17 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Choice 1");
         choiceActive = false;
         choiceBox.SetActive(false);
-        if (GameManager.Instance.state == GameState.Start)
+        switch (currentChoiceContext)
         {
-            Debug.Log("Fight");
-            GameManager.Instance.updateGameState(GameState.Fight);
+            case "FightOrEscape":
+                if (GameManager.Instance.state == GameState.Start)
+                {
+                    Debug.Log("Fight");
+                    GameManager.Instance.updateGameState(GameState.Fight);
+                }
+                break;
+            default:
+                break;
         }
         DisplayNextSentence();
     }
@@ -119,10 +128,17 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Choice 2");
         choiceActive = false;
         choiceBox.SetActive(false);
-        if (GameManager.Instance.state == GameState.Start)
+        switch (currentChoiceContext)
         {
-            Debug.Log("Escape");
-            GameManager.Instance.updateGameState(GameState.Escape);
+            case "FightOrEscape":
+                if (GameManager.Instance.state == GameState.Start)
+                {
+                    Debug.Log("Escape");
+                    GameManager.Instance.updateGameState(GameState.Escape);
+                }
+                break;
+            default:
+                break;
         }
         DisplayNextSentence();
     }
