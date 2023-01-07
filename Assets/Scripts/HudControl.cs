@@ -134,6 +134,5 @@ public class HudControl : MonoBehaviour
     public void Quit() {
         FindObjectOfType<GameManager>().SendMessage("RestartGame", 0.1);
         Time.timeScale = 1;
-        Destroy(player.gameObject);
     }
 }

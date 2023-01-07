@@ -56,7 +56,7 @@ public class DialogueManager : MonoBehaviour
 
         Sentence sentence = sentences.Dequeue();
         StopAllCoroutines();
-        nameText.text = sentence.name;
+        nameText.text = sentence.speakerName;
         StartCoroutine(TypeSentence(sentence.sentence));
         Debug.Log(sentence);
     }

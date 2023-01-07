@@ -316,6 +316,7 @@ public class Player : MonoBehaviour
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
         curHealth = maxHealth;
+        HealthUpdate(curHealth);
         DeathEvent(false);
     }
 }

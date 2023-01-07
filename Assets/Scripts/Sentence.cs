@@ -5,6 +5,6 @@ using UnityEngine;
 public class Sentence : MonoBehaviour
 {
 
-    [SerializeField] public string name;
+    [SerializeField] public string speakerName;
     [SerializeField] public string sentence;
 }

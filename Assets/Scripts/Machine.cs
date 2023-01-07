@@ -13,6 +13,7 @@ public class Machine : MonoBehaviour
     private bool[] itemPlaced = new bool[3];
     private int activated = 0;
 
+    public Dialogue dialogue;
     private void Awake()
     {
         for (int i = 0; i < items.Length; i++)
@@ -43,8 +44,11 @@ public class Machine : MonoBehaviour
             GameObject item = Instantiate(itemPrefabs[number], items[activated].position, items[activated].rotation) as GameObject;
             item.transform.SetParent(items[activated++]);
             itemPlaced[number] = true;
-            if (number < doors.Length)
+            if (number < doors.Length) {
                 doors[number].SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+                FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+                Debug.Log("Door " + number + " opened.");
+            }
             planeHolder.SetInteger("actionNumber", activated);
             if (activated == 3)
                 Instantiate(itemPrefabs[activated], items[activated].position, Quaternion.identity);
