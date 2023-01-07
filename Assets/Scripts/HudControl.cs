@@ -49,11 +49,25 @@ public class HudControl : MonoBehaviour
         Player.ItemUpdate += UpdatePlayerItems;
         Player.PauseEvent += PauseMenu;
         Player.DeathEvent += DeathMenu;
+        GameManager.OnGameStateChanged += DisplayItemModule;
     }
 
-    private void DisplayItemModule(bool display)
+    private void OnDestroy()
     {
-        itemModule.gameObject.SetActive(display);
+        Player.HealthUpdate -= UpdatePlayerHealth;
+        Player.AmmoUpdate -= UpdatePlayerAmmo;
+        Player.ItemUpdate -= UpdatePlayerItems;
+        Player.PauseEvent -= PauseMenu;
+        Player.DeathEvent -= DeathMenu;
+        GameManager.OnGameStateChanged -= DisplayItemModule;
+    }
+
+    private void DisplayItemModule(GameState state)
+    {
+        if (state == GameState.Escape)
+            itemModule.gameObject.SetActive(true);
+        else
+            itemModule.gameObject.SetActive(false);
     }
 
     private void PauseMenu(bool pause)

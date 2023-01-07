@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     private List<string> gotItems = new List<string>(4);
     private bool gotWeapon;
     private bool gotKey;
+    private bool paused;
     private float walkTime;
 
     // Events
@@ -53,7 +54,6 @@ public class Player : MonoBehaviour
     public static event ItemUpdateHandler ItemUpdate;
     public delegate void PauseHandler(bool pause);
     public static event PauseHandler PauseEvent;
-
     public delegate void DeathHandler(bool dead);
     public static event DeathHandler DeathEvent;
 
@@ -101,8 +101,8 @@ public class Player : MonoBehaviour
         Move();
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            bool pause = Time.timeScale > 0 ? true : false;
-            PauseEvent(pause);
+            paused = Time.timeScale > 0 ? true : false;
+            PauseEvent(paused);
         }
         #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Bypass();
@@ -277,6 +277,7 @@ public class Player : MonoBehaviour
         rifle.transform.localPosition = Vector3.zero;
         gotWeapon = true;
         TakeAmmo(20);
+        GameManager.Instance.updateGameState(GameState.Escape);
     }
 
     /// <summary>
