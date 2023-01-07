@@ -50,11 +50,15 @@ public class HudControl : MonoBehaviour
         {
             Time.timeScale = 0;
             muted.TransitionTo(0);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;  
         }
         else
         {
             Time.timeScale = 1;
             normal.TransitionTo(0);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
         pauseMenu.SetActive(pause);
         
