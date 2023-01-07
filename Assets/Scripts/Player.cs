@@ -278,7 +278,6 @@ public class Player : MonoBehaviour
         rifle.transform.localPosition = Vector3.zero;
         gotWeapon = true;
         TakeAmmo(20);
-        GameManager.Instance.updateGameState(GameState.Escape);
     }
 
     /// <summary>

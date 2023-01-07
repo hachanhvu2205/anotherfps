@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //updateGameState(GameState.Escape);
+        updateGameState(GameState.Start);
     }
 
     private void RestartGame(float time)
@@ -35,6 +35,12 @@ public class GameManager : MonoBehaviour
         state = newState;
 
         switch (state) {
+            case GameState.Start:
+                HandleStartState();
+                break;
+            case GameState.Fight:
+                //HandleFightState();
+                break;
             case GameState.Escape:
                 HandleEscapeState();
                 break;
@@ -44,15 +50,12 @@ public class GameManager : MonoBehaviour
             case GameState.Pause:
                 HandlePauseState();
                 break;
-            case GameState.Play:
-                HandlePlayState();
-                break;
             default:
                 Debug.Log("Invalid game state");
                 break;
         }
 
-        OnGameStateChanged.Invoke(newState);
+        OnGameStateChanged?.Invoke(newState);
     }
 
     private void HandleEscapeState(){
@@ -64,13 +67,14 @@ public class GameManager : MonoBehaviour
     private void HandlePauseState(){
     }
 
-    private void HandlePlayState(){
+    private void HandleStartState(){
     }
 
 }
 public enum GameState {
     Escape,
+    Fight,
     Death,
     Pause,
-    Play
+    Start
 }

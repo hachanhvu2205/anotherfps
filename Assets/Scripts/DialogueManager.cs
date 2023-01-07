@@ -8,9 +8,11 @@ public class DialogueManager : MonoBehaviour
 {
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogueText;
+    public GameObject choiceBox;
 
     public static bool DialogueIsOpen = false;
-
+    private bool choiceActive = false;
+    private int choice;
     public Animator animator;
 
     private Queue<Sentence> sentences;
@@ -22,6 +24,8 @@ public class DialogueManager : MonoBehaviour
     {
         sentences = new Queue<Sentence>();
         player = GameObject.Find("Player").GetComponent<Player>();
+
+        choiceBox.SetActive(false);
     }
 
     public void StartDialogue (Dialogue dialogue)
@@ -48,6 +52,7 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence ()
     {
+        if (choiceActive) return;
         if (sentences.Count == 0)
         {
             EndDialogue();
@@ -58,7 +63,19 @@ public class DialogueManager : MonoBehaviour
         StopAllCoroutines();
         nameText.text = sentence.speakerName;
         StartCoroutine(TypeSentence(sentence.sentence));
-        Debug.Log(sentence);
+        if(sentence.choices.Length > 0)
+        {
+            TextMeshProUGUI[] choicesText = choiceBox.GetComponentsInChildren<TextMeshProUGUI>();
+            for (int i = 0; i < sentence.choices.Length; i++)
+            {
+                Debug.Log("choice: " + sentence.choices[i]);
+                choicesText[i].text = sentence.choices[i];
+                choicesText[i].transform.parent.gameObject.SetActive(true);
+            }
+            choiceActive = true;
+            choiceBox.SetActive(true);
+        }
+        Debug.Log("sentence: " + sentence.speakerName + ": " + sentence.sentence);
     }
 
     IEnumerator TypeSentence (string sentence)
@@ -83,4 +100,32 @@ public class DialogueManager : MonoBehaviour
 
         animator.SetBool("isOpen", false);
     }
+
+    public void Choice1()
+    {
+        Debug.Log("Choice 1");
+        choiceActive = false;
+        choiceBox.SetActive(false);
+        if (GameManager.Instance.state == GameState.Start)
+        {
+            Debug.Log("Fight");
+            GameManager.Instance.updateGameState(GameState.Fight);
+        }
+        DisplayNextSentence();
+    }
+    
+    public void Choice2()
+    {
+        Debug.Log("Choice 2");
+        choiceActive = false;
+        choiceBox.SetActive(false);
+        if (GameManager.Instance.state == GameState.Start)
+        {
+            Debug.Log("Escape");
+            GameManager.Instance.updateGameState(GameState.Escape);
+        }
+        DisplayNextSentence();
+    }
+
+
 }
