@@ -5,6 +5,5 @@ using UnityEngine;
 public class Dialogue : MonoBehaviour
 {
 
-    [SerializeField] public string name;
-    [SerializeField] public string[] sentences;
+    [SerializeField] public Sentence[] sentences;
 }
