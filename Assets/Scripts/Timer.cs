@@ -28,7 +28,7 @@ public class Timer : MonoBehaviour
     {
         if (enabled)
         {
-            Debug.Log(timeRemaining);
+            // Debug.Log(timeRemaining);
             timeRemaining =  timeRemaining - Time.deltaTime;
             if (timeRemaining < 0)
             {
