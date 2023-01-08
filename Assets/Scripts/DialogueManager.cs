@@ -94,7 +94,6 @@ public class DialogueManager : MonoBehaviour
     {
         Debug.Log("End of conversation.");
 
-        // player.EnableMovement(true);
         DialogueIsOpen = false;
         Time.timeScale = 1;
         Cursor.visible = false;
