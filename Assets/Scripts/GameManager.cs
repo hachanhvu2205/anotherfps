@@ -52,9 +52,9 @@ public class GameManager : MonoBehaviour
                 break;
             default:
                 Debug.Log("Invalid game state");
-                break;
+                return;
         }
-
+        Debug.Log("GameManager: Updated Game State to " + state);
         OnGameStateChanged?.Invoke(newState);
     }
 
