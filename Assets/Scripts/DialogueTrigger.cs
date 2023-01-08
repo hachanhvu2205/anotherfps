@@ -5,6 +5,8 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour
 {
     public Dialogue dialogue;
+    public bool onlyOnSpecificStates;
+    public GameState[] enabledInStates;
 
     public void TriggerDialogue ()
     {
@@ -12,9 +14,21 @@ public class DialogueTrigger : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        if(other.gameObject.tag == "Player") {
+        if(other.gameObject.tag == "Player" && CheckStates()) {
             TriggerDialogue();
             Destroy(gameObject);
         }
+    }
+
+    bool CheckStates() {
+        if(onlyOnSpecificStates) {
+            foreach(GameState state in enabledInStates) {
+                if(state == GameManager.Instance.state) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 }

@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     private Vector3 camRotation;
     private int curHealth = _maxHealth;
     private int curAmmo;
+    private int kills;
     private List<string> gotItems = new List<string>(4);
     private bool gotWeapon;
     private bool gotKey;
@@ -56,6 +57,8 @@ public class Player : MonoBehaviour
     public static event PauseHandler PauseEvent;
     public delegate void DeathHandler(bool dead);
     public static event DeathHandler DeathEvent;
+    public delegate void KillHandler(int kills);
+    public static event KillHandler KillUpdate;
 
     // Customizeable Variables
     public GameObject riflePrefab;
@@ -123,6 +126,12 @@ public class Player : MonoBehaviour
             GetItem("MediumBattery");
         else if (Input.GetKeyDown(KeyCode.F5))
             GetItem("GasCan");
+        else if (Input.GetKeyDown(KeyCode.F6))
+            GameManager.Instance.updateGameState(GameState.Start);
+        else if (Input.GetKeyDown(KeyCode.F7))
+            GameManager.Instance.updateGameState(GameState.Fight);
+        else if (Input.GetKeyDown(KeyCode.F8))
+            GameManager.Instance.updateGameState(GameState.Escape);
     }
     #endif
 
@@ -320,5 +329,14 @@ public class Player : MonoBehaviour
         curHealth = maxHealth;
         HealthUpdate(curHealth);
         DeathEvent(false);
+    }
+
+    public void SetKills(int kills) {
+        KillUpdate(kills);
+    }
+    public void AddKill()
+    {
+        kills++;
+        KillUpdate(kills);
     }
 }

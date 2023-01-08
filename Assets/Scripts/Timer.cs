@@ -45,7 +45,7 @@ public class Timer : MonoBehaviour
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
         float milliseconds = Mathf.FloorToInt((timeToDisplay * 100) % 100);
 
-        timerText.text = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds);
+        timerText.text = string.Format("{0:00}:{1:00}.{2:00}", minutes, seconds, milliseconds);
     }
 
     public void setTimeRemaining(float time)
@@ -60,10 +60,12 @@ public class Timer : MonoBehaviour
         if (state == GameState.Start)
         {
             enabled = false;
+            timer.SetActive(false);
         }
         else if (state == GameState.Fight)
         {
             enabled = false;
+            timer.SetActive(false);
         }
         else if (state == GameState.Escape)
         {
@@ -74,6 +76,7 @@ public class Timer : MonoBehaviour
         else
         {
             enabled = false;
+            timer.SetActive(false);
         }
     }
 }

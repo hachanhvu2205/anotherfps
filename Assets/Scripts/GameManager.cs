@@ -44,12 +44,6 @@ public class GameManager : MonoBehaviour
             case GameState.Escape:
                 HandleEscapeState();
                 break;
-            case GameState.Death:
-                HandleDeathState();
-                break;
-            case GameState.Pause:
-                HandlePauseState();
-                break;
             default:
                 Debug.Log("Invalid game state");
                 return;
@@ -60,21 +54,12 @@ public class GameManager : MonoBehaviour
 
     private void HandleEscapeState(){
     }
-
-    private void HandleDeathState(){
-    }
-
-    private void HandlePauseState(){
-    }
-
     private void HandleStartState(){
     }
 
 }
 public enum GameState {
+    Start,
     Escape,
-    Fight,
-    Death,
-    Pause,
-    Start
+    Fight
 }

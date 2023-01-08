@@ -99,6 +99,7 @@ public class Turret : MonoBehaviour
             Destroy(tWeapon.gameObject);
             Destroy(tBase.gameObject);
             enabled = false;
+            GameObject.Find("Player").GetComponent<Player>().AddKill();
             Destroy(this);
         }
     }
