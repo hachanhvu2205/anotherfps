@@ -45,6 +45,7 @@ public class DialogueManager : MonoBehaviour
         animator.SetBool("isOpen", true);
 
         sentences.Clear();
+        StopAllCoroutines();
         currentDialogue = dialogue;
         foreach (Sentence sentence in dialogue.sentences)
         {
@@ -56,13 +57,7 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence ()
     {
-        if (isTyping) 
-        {
-            StopAllCoroutines();
-            dialogueText.text = sentences.Dequeue().sentence;
-            isTyping = false;
-            return;
-        }
+        if(StopTyping()) return;
         if (choiceActive) return;
         if (sentences.Count == 0)
         {
@@ -102,6 +97,18 @@ public class DialogueManager : MonoBehaviour
         }
         sentences.Dequeue();
         isTyping = false;
+    }
+
+    bool StopTyping()
+    {
+        if (isTyping) 
+        {
+            StopAllCoroutines();
+            dialogueText.text = sentences.Dequeue().sentence;
+            isTyping = false;
+            return true;
+        }
+        return false;
     }
 
     void EndDialogue ()
@@ -150,17 +157,19 @@ public class DialogueManager : MonoBehaviour
                     StartDialogue(currentDialogue);
                 }
                 break;
-            case "FightOrEscape":
+            case "FightOrSave":
                 if (GameManager.Instance.state == GameState.Start)
                 {
                 }
                     Debug.Log("Fight");
                     GameManager.Instance.updateGameState(GameState.Fight);
-                DisplayNextSentence();
+                    StopTyping();
+                    DisplayNextSentence();
                 break;
             default:
                 break;
         }
+        
         
     }
     
@@ -177,14 +186,16 @@ public class DialogueManager : MonoBehaviour
                 {
                 }
                 GameManager.Instance.updateGameState(GameState.Start);
+                StopTyping();
                 DisplayNextSentence();
                 break;
-            case "FightOrEscape":
+            case "FightOrSave":
                 if (GameManager.Instance.state == GameState.Start)
                 {
                 }
-                    Debug.Log("Escape");
-                    GameManager.Instance.updateGameState(GameState.Escape);
+                Debug.Log("Save");
+                GameManager.Instance.updateGameState(GameState.Save);
+                StopTyping();
                 DisplayNextSentence();
                 break;
             default:

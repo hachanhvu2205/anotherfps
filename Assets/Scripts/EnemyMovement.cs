@@ -25,7 +25,7 @@ public class EnemyMovement : MonoBehaviour
         {
             // Change to Move towards Player and Shoot
             _agent.isStopped = true;
-        } else if (GameManager.Instance.state == GameState.Escape)
+        } else if (GameManager.Instance.state == GameState.Save)
         {
             _agent.isStopped = false;
             _agent.SetDestination(Player.transform.position);

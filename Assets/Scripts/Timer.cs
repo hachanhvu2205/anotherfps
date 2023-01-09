@@ -8,7 +8,7 @@ public class Timer : MonoBehaviour
     public GameObject timer;
     private TextMeshProUGUI timerText;
     public float timeRemaining;
-    private bool enabled = false;
+    private bool timerEnabled = false;
     
     // Start is called before the first frame update
     void Start()
@@ -26,14 +26,14 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enabled)
+        if (timerEnabled)
         {
             // Debug.Log(timeRemaining);
             timeRemaining =  timeRemaining - Time.deltaTime;
             if (timeRemaining < 0)
             {
                 timeRemaining = 0;
-                enabled = false;
+                timerEnabled = false;
             }
             DisplayTime(timeRemaining);
         }
@@ -51,7 +51,7 @@ public class Timer : MonoBehaviour
     public void setTimeRemaining(float time)
     {
         timeRemaining = time;
-        enabled = true;
+        timerEnabled = true;
     }
 
     void TimerOnGameStateChanged(GameState state)
@@ -59,23 +59,23 @@ public class Timer : MonoBehaviour
         Debug.Log("Timer Handling game state changed: " + state);
         if (state == GameState.Start)
         {
-            enabled = false;
+            timerEnabled = false;
             timer.SetActive(false);
         }
         else if (state == GameState.Fight)
         {
-            enabled = false;
+            timerEnabled = false;
             timer.SetActive(false);
         }
         else if (state == GameState.Escape)
         {
             setTimeRemaining(60);
-            enabled = true;
+            timerEnabled = true;
             timer.SetActive(true);
         }
         else
         {
-            enabled = false;
+            timerEnabled = false;
             timer.SetActive(false);
         }
     }

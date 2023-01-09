@@ -131,10 +131,18 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.F7))
             GameManager.Instance.updateGameState(GameState.Fight);
         else if (Input.GetKeyDown(KeyCode.F8))
-            GameManager.Instance.updateGameState(GameState.Escape);
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+                GameManager.Instance.updateGameState(GameState.Save);
+            else
+                GameManager.Instance.updateGameState(GameState.Escape);
+        }
         else if (Input.GetKeyDown(KeyCode.F9))
         {
-            UpdateSpawnpoint(GameObject.Find("SpawnPoint (1)").transform);
+            if (Input.GetKey(KeyCode.LeftShift))
+                UpdateSpawnpoint(GameObject.Find("SpawnPoint").transform);
+            else 
+                UpdateSpawnpoint(GameObject.Find("SpawnPoint (1)").transform);
             Respawn();
         }
         else if (Input.GetKeyDown(KeyCode.F10))

@@ -145,8 +145,8 @@ public class Soldier : MonoBehaviour{
             Sentence sentence = gameObject.AddComponent<Sentence>();
             sentence.sentence = "Fight or Escape?";
             Choice choice = gameObject.AddComponent<Choice>();
-            choice.choiceContext = "FightOrEscape";
-            choice.choices = new string[2]{ "Fight", "Escape"};
+            choice.choiceContext = "FightOrSave";
+            choice.choices = new string[2]{ "Fight", "Save"};
             sentence.choice = choice;
             dialogue.sentences[0] = sentence;
             FindObjectOfType<DialogueManager>().StartDialogue(dialogue);

@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour
             case GameState.Start:
                 HandleStartState();
                 break;
+            case GameState.Save:
+                HandleSaveState();
+                break;
             case GameState.Fight:
                 HandleFightState();
                 break;
@@ -59,6 +62,11 @@ public class GameManager : MonoBehaviour
     }
 
     private void HandleEscapeState(){
+        foreach (Door door in doorsInStartState){
+            door.gameObject.SendMessage("ToggleDoor", false);
+        }
+    }
+    private void HandleSaveState() {
         foreach (Door door in doorsInStartState){
             door.gameObject.SendMessage("ToggleDoor", false);
         }
@@ -81,7 +89,8 @@ public class GameManager : MonoBehaviour
 }
 public enum GameState {
     Start,
-    Escape,
     Fight,
+    Save,
+    Escape,
     DialogueLoop
 }

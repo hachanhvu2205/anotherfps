@@ -40,18 +40,25 @@ public class Objectives : MonoBehaviour
     void ObjectivesOnGameStateChanged(GameState state)
     {
         Debug.Log("Objectives Handling game state changed: " + state);
-        PrintObjectives();
         if (state == GameState.Start)
         {
+            objectives = new string[4];
             objectives[0] = "Defeat 0/2 enemies";
         }
         else if (state == GameState.Fight)
         {
+            objectives = new string[4];
             objectives[0] = "Defeat the Commander";
             objectives[1] = "Defeat 0/10 enemies";
         }
+        else if (state == GameState.Save)
+        {
+            objectives = new string[4];
+            objectives[0] = "Find the Commander";
+        }
         else if (state == GameState.Escape)
         {
+            objectives = new string[4];
             objectives[0] = "Escape the island before time runs out";
             objectives[1] = "Find a way to power the plane";
         }
