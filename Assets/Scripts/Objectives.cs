@@ -50,7 +50,7 @@ public class Objectives : MonoBehaviour
             objectives = new string[4];
             objectives[0] = "Infiltrate the enemy base";
             objectives[1] = "Choose Save: Find the key to open door";
-            objectives[2] = "Choose Fight: Kill 0/3 enemies to open door";
+            objectives[2] = "Choose Fight: Defeat 0/3 enemies to open door";
         }
         else if (state == GameState.FindKey)
         {
@@ -62,12 +62,18 @@ public class Objectives : MonoBehaviour
         {
             objectives = new string[4];
             objectives[0] = "Infiltrate the enemy base";
-            objectives[1] = "Kill 0/3 enemies to open door";
+            objectives[1] = "Defeat 0/3 enemies to open door";
         }
-        else if (state == GameState.FindKeyEnter || state == GameState.FindGunEnter)
+        else if (state == GameState.FindKeyEnter)
         {
             objectives = new string[4];
-            objectives[1] = "Find the Commander";
+            objectives[0] = "Find the Commander";
+        }
+        else if (state == GameState.FindGunEnter)
+        {
+            objectives = new string[4];
+            objectives[0] = "Find and defeat the Commander";
+            objectives[1] = "Defeat 0/7 enemies";
         }
         else if (state == GameState.Fight)
         {
@@ -132,6 +138,18 @@ public class Objectives : MonoBehaviour
             {
                 objectives[1] = "Objective Completed";
                 GameManager.Instance.updateGameState(GameState.FindGunEnter);
+            }
+        }
+        else if (GameManager.Instance.state == GameState.FindGunEnter)
+        {
+            if (kills < 7)
+            {
+                objectives[1] = "Defeat " + kills + "/7 enemies";
+            }
+            else
+            {
+                objectives[1] = "Objective Completed";
+                GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
             }
         }
         else if (GameManager.Instance.state == GameState.Fight)

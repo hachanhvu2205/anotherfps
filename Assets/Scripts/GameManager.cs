@@ -129,6 +129,7 @@ public class GameManager : MonoBehaviour
     private void HandleFindGunEnterState(){
         ResetObjectStates();
         ToggleDoors(doorsInFindGunEnterState);
+        FindObjectOfType<Player>().GetComponent<Player>().SetKills(0);
         Dialogue dialogue = gameObject.AddComponent<Dialogue>();
         dialogue.sentences = new Sentence[1];
         Sentence sentence = gameObject.AddComponent<Sentence>();
