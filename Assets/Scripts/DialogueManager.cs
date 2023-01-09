@@ -203,5 +203,14 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-
+    public void OneLineDialogue(string line)
+    {
+        Debug.Log("One line dialogue");
+        Dialogue localDialogue = gameObject.AddComponent<Dialogue>();
+        localDialogue.sentences = new Sentence[1];
+        Sentence localSentence = gameObject.AddComponent<Sentence>();
+        localSentence.sentence = line;
+        localDialogue.sentences[0] = localSentence;
+        StartDialogue(localDialogue);
+    }
 }

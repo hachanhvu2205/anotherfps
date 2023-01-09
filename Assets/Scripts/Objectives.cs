@@ -149,7 +149,7 @@ public class Objectives : MonoBehaviour
             else
             {
                 objectives[1] = "Objective Completed";
-                GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+                GameManager.Instance.updateGameState(GameState.Fight);
             }
         }
         else if (GameManager.Instance.state == GameState.Fight)

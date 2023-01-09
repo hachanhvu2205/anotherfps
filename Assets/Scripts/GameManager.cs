@@ -130,17 +130,14 @@ public class GameManager : MonoBehaviour
         ResetObjectStates();
         ToggleDoors(doorsInFindGunEnterState);
         FindObjectOfType<Player>().GetComponent<Player>().SetKills(0);
-        Dialogue dialogue = gameObject.AddComponent<Dialogue>();
-        dialogue.sentences = new Sentence[1];
-        Sentence sentence = gameObject.AddComponent<Sentence>();
-        sentence.sentence = "(The door to the base opened)";
-        dialogue.sentences[0] = sentence;
-        FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+        GameObject.Find("DialogueManager").GetComponent<DialogueManager>().OneLineDialogue("(A door opens in the distance)");
     }
 
     private void HandleFightState(){
         ResetObjectStates();
         ToggleDoors(doorsInFightState);
+        GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+        GameObject.Find("DialogueManager").GetComponent<DialogueManager>().OneLineDialogue("(A door opens in the distance)");
     }
     private void HandleSaveState() {
         ResetObjectStates();

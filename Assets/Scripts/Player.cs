@@ -369,7 +369,8 @@ public class Player : MonoBehaviour
     }
 
     public void SetKills(int kills) {
-        KillUpdate(kills);
+        this.kills = kills; 
+        KillUpdate(this.kills);
     }
     public void AddKill()
     {
