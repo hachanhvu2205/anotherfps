@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Soldier : MonoBehaviour{
     private GameObject mEnemy;
+    public CapsuleCollider cCollider;
     public float UpTime = 3.0f;
     public float ShootTime = 2.0f;
     public float DownTime = 2.0f;
@@ -135,7 +136,22 @@ public class Soldier : MonoBehaviour{
         get{return mIsActive;}
     }
        
-
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Player")
+        {
+            Dialogue dialogue = gameObject.AddComponent<Dialogue>();
+            dialogue.sentences = new Sentence[1];
+            Sentence sentence = gameObject.AddComponent<Sentence>();
+            sentence.sentence = "Fight or Escape?";
+            Choice choice = gameObject.AddComponent<Choice>();
+            choice.choiceContext = "FightOrEscape";
+            choice.choices = new string[2]{ "Fight", "Escape"};
+            sentence.choice = choice;
+            dialogue.sentences[0] = sentence;
+            FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+        }
+    }
 
     
 }

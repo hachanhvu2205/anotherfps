@@ -21,26 +21,16 @@ public class EnemyMovement : MonoBehaviour
     {
         Distance = Vector3.Distance(Player.transform.position, this.transform.position);
 
-        if(Distance <=50)
+        if(GameManager.Instance.state == GameState.Fight)
         {
-            isAngered = true;
-        }
-
-        if(Distance > 50f)
-        {
-            isAngered = false;
-        }
-
-        if(isAngered)
+            // Change to Move towards Player and Shoot
+            _agent.isStopped = true;
+        } else if (GameManager.Instance.state == GameState.Escape)
         {
             _agent.isStopped = false;
             _agent.SetDestination(Player.transform.position);
         }
-
-        if(!isAngered)
-        {
-            _agent.isStopped = true;
-        }
+        
     }
 
     

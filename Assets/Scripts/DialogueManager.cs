@@ -142,9 +142,10 @@ public class DialogueManager : MonoBehaviour
             case "FightOrEscape":
                 if (GameManager.Instance.state == GameState.Start)
                 {
+                }
                     Debug.Log("Fight");
                     GameManager.Instance.updateGameState(GameState.Fight);
-                }
+                DisplayNextSentence();
                 break;
             default:
                 break;
@@ -170,9 +171,9 @@ public class DialogueManager : MonoBehaviour
             case "FightOrEscape":
                 if (GameManager.Instance.state == GameState.Start)
                 {
+                }
                     Debug.Log("Escape");
                     GameManager.Instance.updateGameState(GameState.Escape);
-                }
                 DisplayNextSentence();
                 break;
             default:
