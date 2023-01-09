@@ -5,8 +5,22 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour
 {
     public Dialogue dialogue;
+    
+    [Header("Enabled only on specific states")]
     public bool onlyOnSpecificStates;
     public GameState[] enabledInStates;
+
+    void Update()
+    {
+        if (CheckStates())
+        {
+            GetComponent<Collider>().enabled = true;
+        }
+        else
+        {
+            GetComponent<Collider>().enabled = false;
+        }
+    }
 
     public void TriggerDialogue ()
     {

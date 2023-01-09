@@ -43,12 +43,36 @@ public class Objectives : MonoBehaviour
         if (state == GameState.Start)
         {
             objectives = new string[4];
-            objectives[0] = "Defeat 0/2 enemies";
+            objectives[0] = "Infiltrate the enemy base";
+        }
+        else if (state == GameState.Start2)
+        {
+            objectives = new string[4];
+            objectives[0] = "Infiltrate the enemy base";
+            objectives[1] = "Choose Save: Find the key to open door";
+            objectives[2] = "Choose Fight: Kill 0/3 enemies to open door";
+        }
+        else if (state == GameState.FindKey)
+        {
+            objectives = new string[4];
+            objectives[0] = "Infiltrate the enemy base";
+            objectives[1] = "Use the key to open door";
+        }
+        else if (state == GameState.FindGun)
+        {
+            objectives = new string[4];
+            objectives[0] = "Infiltrate the enemy base";
+            objectives[1] = "Kill 0/3 enemies to open door";
+        }
+        else if (state == GameState.FindKeyEnter || state == GameState.FindGunEnter)
+        {
+            objectives = new string[4];
+            objectives[1] = "Find the Commander";
         }
         else if (state == GameState.Fight)
         {
             objectives = new string[4];
-            objectives[0] = "Defeat the Commander";
+            objectives[0] = "Find and defeat the Commander";
             objectives[1] = "Defeat 0/10 enemies";
         }
         else if (state == GameState.Save)
@@ -59,7 +83,7 @@ public class Objectives : MonoBehaviour
         else if (state == GameState.Escape)
         {
             objectives = new string[4];
-            objectives[0] = "Escape the island before time runs out";
+            objectives[0] = "Escape the island with the commander before time runs out";
             objectives[1] = "Find a way to power the plane";
         }
         else
@@ -87,15 +111,27 @@ public class Objectives : MonoBehaviour
     {
         if (GameManager.Instance.state == GameState.Start)
         {
-            if (kills < 2)
+            // if (kills < 2)
+            // {
+            //     objectives[0] = "Defeat " + kills + "/2 enemies";
+            // }
+            // else
+            // {
+            //     objectives[0] = "Objective Completed";
+                
+            //     GameManager.Instance.updateGameState(GameState.Fight);
+            // }
+        }
+        else if (GameManager.Instance.state == GameState.FindGun)
+        {
+            if (kills < 3)
             {
-                objectives[0] = "Defeat " + kills + "/2 enemies";
+                objectives[1] = "Defeat " + kills + "/3 enemies to open door";
             }
             else
             {
-                objectives[0] = "Objective Completed";
-                
-                GameManager.Instance.updateGameState(GameState.Fight);
+                objectives[1] = "Objective Completed";
+                GameManager.Instance.updateGameState(GameState.FindGunEnter);
             }
         }
         else if (GameManager.Instance.state == GameState.Fight)

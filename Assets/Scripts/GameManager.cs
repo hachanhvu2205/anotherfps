@@ -11,7 +11,36 @@ public class GameManager : MonoBehaviour
 
     [Header("Start State Settings")]
     public Door[] doorsInStartState;
-    public GameObject[] enemiesInStartState;
+    // public GameObject[] enemiesInStartState;
+
+    [Header("FindKey State Settings")]
+    public Door[] doorsInFindKeyState;
+    // public GameObject[] enemiesInFindKeyState;
+
+    [Header("FindGun State Settings")]
+    public Door[] doorsInFindGunState;
+    // public GameObject[] enemiesInFindGunState;
+
+    [Header("FindKeyEnter State Settings")]
+    public Door[] doorsInFindKeyEnterState;
+    // public GameObject[] enemiesInFindKeyEnterState;
+
+    [Header("FindGunEnter State Settings")]
+    public Door[] doorsInFindGunEnterState;
+    // public GameObject[] enemiesInFindGunEnterState;
+
+    [Header("Fight State Settings")]
+    public Door[] doorsInFightState;
+    // public GameObject[] enemiesInFightState;
+
+    [Header("Save State Settings")]
+    public Door[] doorsInSaveState;
+    // public GameObject[] enemiesInSaveState;
+
+    [Header("Escape State Settings")]
+    public Door[] doorsInEscapeState;
+    // public GameObject[] enemiesInEscapeState;
+
     private void Awake()
     {
         Instance = this;
@@ -42,6 +71,21 @@ public class GameManager : MonoBehaviour
             case GameState.Start:
                 HandleStartState();
                 break;
+            case GameState.Start2:
+                HandleStartState();
+                break;
+            case GameState.FindKey:
+                HandleFindKeyState();
+                break;
+            case GameState.FindGun:
+                HandleFindGunState();
+                break;
+            case GameState.FindKeyEnter:
+                HandleFindKeyEnterState();
+                break;
+            case GameState.FindGunEnter:
+                HandleFindGunEnterState();
+                break;
             case GameState.Save:
                 HandleSaveState();
                 break;
@@ -61,34 +105,73 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(newState);
     }
 
-    private void HandleEscapeState(){
-        foreach (Door door in doorsInStartState){
-            door.gameObject.SendMessage("ToggleDoor", false);
-        }
+    private void HandleStartState(){
+        ResetObjectStates();
+        ToggleDoors(doorsInStartState);
+        // foreach (GameObject enemy in enemiesInStartState){
+        //     enemy.GetComponent<Enemy>().ToggleEnemy(true);
+        // }
+    }
+    private void HandleFindKeyState(){
+        ResetObjectStates();
+        ToggleDoors(doorsInFindKeyState);
+    }
+    private void HandleFindGunState(){
+        ResetObjectStates();
+        ToggleDoors(doorsInFindGunState);
+    }
+
+    private void HandleFindKeyEnterState(){
+        ResetObjectStates();
+        ToggleDoors(doorsInFindKeyEnterState);
+    }
+
+    private void HandleFindGunEnterState(){
+        ResetObjectStates();
+        ToggleDoors(doorsInFindGunEnterState);
+        Dialogue dialogue = gameObject.AddComponent<Dialogue>();
+        dialogue.sentences = new Sentence[1];
+        Sentence sentence = gameObject.AddComponent<Sentence>();
+        sentence.sentence = "(The door to the base opened)";
+        dialogue.sentences[0] = sentence;
+        FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+    }
+
+    private void HandleFightState(){
+        ResetObjectStates();
+        ToggleDoors(doorsInFightState);
     }
     private void HandleSaveState() {
-        foreach (Door door in doorsInStartState){
+        ResetObjectStates();
+        ToggleDoors(doorsInSaveState);
+    }
+    private void HandleEscapeState(){
+        ResetObjectStates();
+        ToggleDoors(doorsInEscapeState);
+    }
+
+
+    private void ResetObjectStates() {
+        Door[] allDoors = FindObjectsOfType<Door>();
+        foreach (Door door in allDoors){
             door.gameObject.SendMessage("ToggleDoor", false);
         }
     }
 
-    private void HandleFightState(){
-        foreach (Door door in doorsInStartState){
-            door.gameObject.SendMessage("ToggleDoor", false);
-        }
-    }
-    private void HandleStartState(){
-        foreach (Door door in doorsInStartState){
+    private void ToggleDoors(Door[] doors) {
+        foreach (Door door in doors){
             door.gameObject.SendMessage("ToggleDoor", true);
         }
-        // foreach (GameObject enemy in enemiesInStartState){
-        //     enemy.GetComponent<Enemy>().ToggleEnemy(true);
-        // }
     }
 
 }
 public enum GameState {
     Start,
+    Start2,
+    FindKey,
+    FindGun,
+    FindGunEnter,
+    FindKeyEnter,
     Fight,
     Save,
     Escape,

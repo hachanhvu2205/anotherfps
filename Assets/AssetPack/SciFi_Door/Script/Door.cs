@@ -5,7 +5,6 @@ public class Door : MonoBehaviour
 {
     public float closeTime = 5f;
 
-    public bool forceOpen;
 
     private AudioSource source
     {
@@ -18,7 +17,7 @@ public class Door : MonoBehaviour
 
     private void Start()
     {
-        // doorAnim.SetBool("open", forceOpen);
+        
     }
 
 	private void OnTriggerEnter(Collider other)
