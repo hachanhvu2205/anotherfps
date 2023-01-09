@@ -78,10 +78,10 @@ public class HudControl : MonoBehaviour
 
     private void DisplayCommanderHealthModule(GameState state)
     {
-        if (state == GameState.Escape)
-            commanderModule.gameObject.SetActive(true);
-        else
-            commanderModule.gameObject.SetActive(false);
+        // if (state == GameState.Escape)
+        //     commanderModule.gameObject.SetActive(true);
+        // else
+        //     commanderModule.gameObject.SetActive(false);
     }
 
     private void PauseMenu(bool pause)

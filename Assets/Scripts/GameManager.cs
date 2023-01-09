@@ -104,6 +104,9 @@ public class GameManager : MonoBehaviour
             case GameState.Escape:
                 HandleEscapeState();
                 break;
+            case GameState.Escaped:
+                HandleEscapedState();
+                break;
             case GameState.DialogueLoop:
                 break;
             default:
@@ -169,6 +172,9 @@ public class GameManager : MonoBehaviour
         ResetObjectStates();
         ToggleDoors(doorsInEscapeState);
     }
+    private void HandleEscapedState(){
+        ResetObjectStates();
+    }
 
 
     private void ResetObjectStates() {
@@ -199,5 +205,6 @@ public enum GameState {
     Spare,
     Save,
     Escape,
+    Escaped,
     DialogueLoop
 }

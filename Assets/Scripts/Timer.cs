@@ -57,21 +57,15 @@ public class Timer : MonoBehaviour
     void TimerOnGameStateChanged(GameState state)
     {
         Debug.Log("Timer Handling game state changed: " + state);
-        if (state == GameState.Start)
+        if (state == GameState.Escape)
         {
-            timerEnabled = false;
-            timer.SetActive(false);
-        }
-        else if (state == GameState.Fight)
-        {
-            timerEnabled = false;
-            timer.SetActive(false);
-        }
-        else if (state == GameState.Escape)
-        {
-            setTimeRemaining(60);
+            setTimeRemaining(400);
             timerEnabled = true;
             timer.SetActive(true);
+        }
+        else if (state == GameState.Escaped)
+        {
+            timerEnabled = false;
         }
         else
         {

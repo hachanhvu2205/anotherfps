@@ -51,7 +51,10 @@ public class Machine : MonoBehaviour
             // }
             planeHolder.SetInteger("actionNumber", activated);
             if (activated == 3)
+            {
                 Instantiate(itemPrefabs[activated], items[activated].position, Quaternion.identity);
+                FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+            }
         }
     }
 }
