@@ -12,6 +12,7 @@ public class DialogueManager : MonoBehaviour
 
     public static bool DialogueIsOpen = false;
     private bool choiceActive = false;
+    private bool isTyping = false;
     private string currentChoiceContext;
     private Dialogue currentDialogue;
     private Dialogue tempDialogue;
@@ -55,6 +56,13 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence ()
     {
+        if (isTyping) 
+        {
+            StopAllCoroutines();
+            dialogueText.text = sentences.Dequeue().sentence;
+            isTyping = false;
+            return;
+        }
         if (choiceActive) return;
         if (sentences.Count == 0)
         {
@@ -62,7 +70,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        Sentence sentence = sentences.Dequeue();
+        Sentence sentence = sentences.Peek();
         StopAllCoroutines();
         nameText.text = sentence.speakerName;
         StartCoroutine(TypeSentence(sentence.sentence));
@@ -85,12 +93,15 @@ public class DialogueManager : MonoBehaviour
 
     IEnumerator TypeSentence (string sentence)
     {
+        isTyping = true;
         dialogueText.text = "";
         foreach (char letter in sentence.ToCharArray())
         {
             dialogueText.text += letter;
             yield return null;
         }
+        sentences.Dequeue();
+        isTyping = false;
     }
 
     void EndDialogue ()

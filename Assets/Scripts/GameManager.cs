@@ -17,11 +17,11 @@ public class GameManager : MonoBehaviour
         Instance = this;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        updateGameState(GameState.Start);
     }
 
     private void Start()
     {
+        updateGameState(GameState.Start);
     }
 
     private void RestartGame(float time)
