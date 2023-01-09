@@ -6,7 +6,7 @@ using TMPro;
 
 public class Objectives : MonoBehaviour
 {
-    private string[] objectives = new string[4];
+    private string[] objectives;
     private TextMeshProUGUI objectivesText;
 
 
@@ -16,6 +16,7 @@ public class Objectives : MonoBehaviour
         objectivesText = GameObject.Find("ObjectivesText").GetComponent<TextMeshProUGUI>();
         GameManager.OnGameStateChanged += ObjectivesOnGameStateChanged;
         Player.KillUpdate += PlayerOnKillUpdate;
+        objectives = new string[4];
     }
 
     // Start is called before the first frame update
@@ -39,6 +40,7 @@ public class Objectives : MonoBehaviour
     void ObjectivesOnGameStateChanged(GameState state)
     {
         Debug.Log("Objectives Handling game state changed: " + state);
+        PrintObjectives();
         if (state == GameState.Start)
         {
             objectives[0] = "Defeat 0/2 enemies";
@@ -55,8 +57,9 @@ public class Objectives : MonoBehaviour
         }
         else
         {
-            objectives = new string[0];
+            Debug.Log("Failed attempt to update objectives");
         }
+        PrintObjectives();
         SetObjectivesText(objectives);
     }
 
@@ -100,6 +103,17 @@ public class Objectives : MonoBehaviour
             }
         }
         SetObjectivesText(objectives);
+    }
+
+    void PrintObjectives()
+    {
+        for (int i = 0; i < objectives.Length; i++)
+        {
+            if (objectives[i] != null)
+            {
+                Debug.Log("Objective " + i + ": " + objectives[i]);
+            }
+        }
     }
 
     

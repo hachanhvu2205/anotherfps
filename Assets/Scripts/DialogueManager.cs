@@ -13,6 +13,9 @@ public class DialogueManager : MonoBehaviour
     public static bool DialogueIsOpen = false;
     private bool choiceActive = false;
     private string currentChoiceContext;
+    private Dialogue currentDialogue;
+    private Dialogue tempDialogue;
+    private Sentence additionalSentence;
     public Animator animator;
 
     private Queue<Sentence> sentences;
@@ -41,7 +44,7 @@ public class DialogueManager : MonoBehaviour
         animator.SetBool("isOpen", true);
 
         sentences.Clear();
-
+        currentDialogue = dialogue;
         foreach (Sentence sentence in dialogue.sentences)
         {
             sentences.Enqueue(sentence);
@@ -109,6 +112,33 @@ public class DialogueManager : MonoBehaviour
         choiceBox.SetActive(false);
         switch (currentChoiceContext)
         {
+            case "IntroDecision":
+                if (GameManager.Instance.state == GameState.Start)
+                {
+                    Debug.Log("No");
+                    additionalSentence = gameObject.AddComponent<Sentence>();
+                    additionalSentence.speakerName = "Friend A";
+                    additionalSentence.sentence = "Come on! Focus up!";
+                    Sentence[] tempSentences = new Sentence[currentDialogue.sentences.Length + 1];
+                    Debug.Log("tempSentences.Length: " + tempSentences.Length);
+                    tempSentences[0] = additionalSentence;
+                    for (int i = 1; i < tempSentences.Length; i++)
+                    {
+                        Debug.Log("i: " + i);
+                        tempSentences[i] = currentDialogue.sentences[i - 1];
+                    }
+                    Dialogue tempDialogue = gameObject.AddComponent<Dialogue>();
+                    tempDialogue.sentences = tempSentences;
+                    GameManager.Instance.updateGameState(GameState.DialogueLoop);
+                    EndDialogue();
+                    StartDialogue(tempDialogue);
+                } else if (GameManager.Instance.state == GameState.DialogueLoop)
+                {
+                    Debug.Log("No");
+                    EndDialogue();
+                    StartDialogue(currentDialogue);
+                }
+                break;
             case "FightOrEscape":
                 if (GameManager.Instance.state == GameState.Start)
                 {
@@ -119,7 +149,7 @@ public class DialogueManager : MonoBehaviour
             default:
                 break;
         }
-        DisplayNextSentence();
+        
     }
     
     public void Choice2()
@@ -129,17 +159,25 @@ public class DialogueManager : MonoBehaviour
         choiceBox.SetActive(false);
         switch (currentChoiceContext)
         {
+            case "IntroDecision":
+                Debug.Log("Yes");
+                if (GameManager.Instance.state == GameState.DialogueLoop)
+                {
+                }
+                GameManager.Instance.updateGameState(GameState.Start);
+                DisplayNextSentence();
+                break;
             case "FightOrEscape":
                 if (GameManager.Instance.state == GameState.Start)
                 {
                     Debug.Log("Escape");
                     GameManager.Instance.updateGameState(GameState.Escape);
                 }
+                DisplayNextSentence();
                 break;
             default:
                 break;
         }
-        DisplayNextSentence();
     }
 
 

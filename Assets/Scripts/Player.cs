@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !DialogueManager.DialogueIsOpen)
         {
             paused = Time.timeScale > 0 ? true : false;
             PauseEvent(paused);

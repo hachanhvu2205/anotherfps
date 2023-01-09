@@ -8,16 +8,20 @@ public class GameManager : MonoBehaviour
 	public static GameManager Instance;
     public GameState state;
     public static event Action<GameState> OnGameStateChanged;
+
+    [Header("Start State Settings")]
+    public Door[] doorsInStartState;
+    public GameObject[] enemiesInStartState;
     private void Awake()
     {
         Instance = this;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        updateGameState(GameState.Start);
     }
 
     private void Start()
     {
-        updateGameState(GameState.Start);
     }
 
     private void RestartGame(float time)
@@ -39,10 +43,12 @@ public class GameManager : MonoBehaviour
                 HandleStartState();
                 break;
             case GameState.Fight:
-                //HandleFightState();
+                HandleFightState();
                 break;
             case GameState.Escape:
                 HandleEscapeState();
+                break;
+            case GameState.DialogueLoop:
                 break;
             default:
                 Debug.Log("Invalid game state");
@@ -53,13 +59,29 @@ public class GameManager : MonoBehaviour
     }
 
     private void HandleEscapeState(){
+        foreach (Door door in doorsInStartState){
+            door.gameObject.SendMessage("ToggleDoor", false);
+        }
+    }
+
+    private void HandleFightState(){
+        foreach (Door door in doorsInStartState){
+            door.gameObject.SendMessage("ToggleDoor", false);
+        }
     }
     private void HandleStartState(){
+        foreach (Door door in doorsInStartState){
+            door.gameObject.SendMessage("ToggleDoor", true);
+        }
+        // foreach (GameObject enemy in enemiesInStartState){
+        //     enemy.GetComponent<Enemy>().ToggleEnemy(true);
+        // }
     }
 
 }
 public enum GameState {
     Start,
     Escape,
-    Fight
+    Fight,
+    DialogueLoop
 }
