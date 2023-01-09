@@ -17,7 +17,11 @@ public class HudControl : MonoBehaviour
     private Transform itemModule
     {
         get { return transform.Find("ItemModule"); }
-    }    
+    }
+    private Transform commanderModule
+    {
+        get { return transform.Find("CommanderModule"); }
+    }  
     private Transform ammo
     {
         get { return module.Find("Ammo"); }
@@ -50,6 +54,7 @@ public class HudControl : MonoBehaviour
         Player.PauseEvent += PauseMenu;
         Player.DeathEvent += DeathMenu;
         GameManager.OnGameStateChanged += DisplayItemModule;
+        GameManager.OnGameStateChanged += DisplayCommanderHealthModule;
     }
 
     private void OnDestroy()
@@ -60,6 +65,7 @@ public class HudControl : MonoBehaviour
         Player.PauseEvent -= PauseMenu;
         Player.DeathEvent -= DeathMenu;
         GameManager.OnGameStateChanged -= DisplayItemModule;
+        GameManager.OnGameStateChanged -= DisplayCommanderHealthModule;
     }
 
     private void DisplayItemModule(GameState state)
@@ -68,6 +74,14 @@ public class HudControl : MonoBehaviour
             itemModule.gameObject.SetActive(true);
         else
             itemModule.gameObject.SetActive(false);
+    }
+
+    private void DisplayCommanderHealthModule(GameState state)
+    {
+        if (state == GameState.Escape)
+            commanderModule.gameObject.SetActive(true);
+        else
+            commanderModule.gameObject.SetActive(false);
     }
 
     private void PauseMenu(bool pause)
