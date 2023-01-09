@@ -117,7 +117,18 @@ public class Player : MonoBehaviour
     private void Bypass()
     {
         if (Input.GetKeyDown(KeyCode.F1))
-            gotKey = true;
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                GetRifle();
+                GameManager.Instance.updateGameState(GameState.FindGun);
+            }
+            else
+            {
+                gotKey = true;
+                GameManager.Instance.updateGameState(GameState.FindKey);
+            }
+        }   
         else if (Input.GetKeyDown(KeyCode.F2))
             GetItem("Battery");
         else if (Input.GetKeyDown(KeyCode.F3))

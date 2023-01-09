@@ -79,7 +79,7 @@ public class Objectives : MonoBehaviour
         {
             objectives = new string[4];
             objectives[0] = "Find and defeat the Commander";
-            objectives[1] = "Defeat 0/10 enemies";
+            objectives[1] = "Defeat 0/8 enemies";
         }
         else if (state == GameState.Save)
         {
@@ -154,13 +154,15 @@ public class Objectives : MonoBehaviour
         }
         else if (GameManager.Instance.state == GameState.Fight)
         {
-            if (kills < 10)
+            if (kills < 8)
             {
-                objectives[1] = "Defeat " + kills + "/10 enemies";
+                objectives[1] = "Defeat " + kills + "/8 enemies";
             }
             else
             {
                 objectives[1] = "Objective Completed";
+                GameManager.Instance.updateGameState(GameState.AfterFight);
+
             }
         }
         SetObjectivesText(objectives);

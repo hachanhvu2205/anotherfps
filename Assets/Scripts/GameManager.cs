@@ -92,6 +92,15 @@ public class GameManager : MonoBehaviour
             case GameState.Fight:
                 HandleFightState();
                 break;
+            case GameState.AfterFight:
+                HandleAfterFightState();
+                break;
+            case GameState.Kill:
+                HandleKillState();
+                break;
+            case GameState.Spare:
+                HandleSpareState();
+                break;
             case GameState.Escape:
                 HandleEscapeState();
                 break;
@@ -129,7 +138,6 @@ public class GameManager : MonoBehaviour
     private void HandleFindGunEnterState(){
         ResetObjectStates();
         ToggleDoors(doorsInFindGunEnterState);
-        FindObjectOfType<Player>().GetComponent<Player>().SetKills(0);
         GameObject.Find("DialogueManager").GetComponent<DialogueManager>().OneLineDialogue("(A door opens in the distance)");
     }
 
@@ -138,6 +146,20 @@ public class GameManager : MonoBehaviour
         ToggleDoors(doorsInFightState);
         GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
         GameObject.Find("DialogueManager").GetComponent<DialogueManager>().OneLineDialogue("(A door opens in the distance)");
+    }
+    private void HandleAfterFightState(){
+        ResetObjectStates();
+        GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+        //GameObject.Find("DialogueManager").GetComponent<DialogueManager>().OneLineDialogue("(A door opens in the distance)");
+    }
+    private void HandleKillState() {
+        ResetObjectStates();
+        GameObject.Find("HUD").transform.Find("KillScreen").gameObject.SetActive(true);
+        FindObjectOfType<GameManager>().SendMessage("RestartGame", 4);
+    }
+    private void HandleSpareState() {
+        ResetObjectStates();
+        ToggleDoors(doorsInEscapeState);
     }
     private void HandleSaveState() {
         ResetObjectStates();
@@ -154,6 +176,7 @@ public class GameManager : MonoBehaviour
         foreach (Door door in allDoors){
             door.gameObject.SendMessage("ToggleDoor", false);
         }
+        FindObjectOfType<Player>().GetComponent<Player>().SetKills(0);
     }
 
     private void ToggleDoors(Door[] doors) {
@@ -171,6 +194,9 @@ public enum GameState {
     FindGunEnter,
     FindKeyEnter,
     Fight,
+    AfterFight,
+    Kill,
+    Spare,
     Save,
     Escape,
     DialogueLoop

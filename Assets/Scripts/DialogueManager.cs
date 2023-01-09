@@ -166,6 +166,15 @@ public class DialogueManager : MonoBehaviour
                     StopTyping();
                     DisplayNextSentence();
                 break;
+            case "KillOrSpare":
+                if (GameManager.Instance.state == GameState.AfterFight)
+                {
+                    Debug.Log("Kill");
+                    GameManager.Instance.updateGameState(GameState.Kill);
+                    StopTyping();
+                    DisplayNextSentence();
+                }
+                break;
             default:
                 break;
         }
@@ -197,6 +206,15 @@ public class DialogueManager : MonoBehaviour
                 GameManager.Instance.updateGameState(GameState.Save);
                 StopTyping();
                 DisplayNextSentence();
+                break;
+            case "KillOrSpare":
+                if (GameManager.Instance.state == GameState.AfterFight)
+                {
+                    Debug.Log("Spare");
+                    GameManager.Instance.updateGameState(GameState.Spare);
+                    StopTyping();
+                    DisplayNextSentence();
+                }
                 break;
             default:
                 break;
