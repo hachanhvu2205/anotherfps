@@ -197,8 +197,17 @@ public class Player : MonoBehaviour
                 Vector3 dir = target - cam.position;
                 Ray ray = new Ray(cam.position, dir.normalized);
                 RaycastHit hit;
+                if(Physics.Raycast(ray,out hit,shootRange))
+                {
+                    if(hit.transform.gameObject.tag=="Enemy")
+                    {
+                        hit.transform.parent.GetComponent<Soldier>().Hit();
+                    }
+                }
+                
                 if (Physics.Raycast(ray, out hit, shootRange))
                 {
+                   
                     hit.collider.SendMessage("TakeDamage", SendMessageOptions.DontRequireReceiver);
                     GameObject hitFlare = Instantiate(feedbackPrefab, hit.point, Quaternion.identity) as GameObject;
                     Destroy(hitFlare, 0.2f);
@@ -225,7 +234,7 @@ public class Player : MonoBehaviour
     /// Takes a given amount of damage
     /// </summary>
     /// <param name="amount">The amount of damage to take</param>
-    private void TakeDamage(int amount)
+    public void TakeDamage(int amount)
     {
         curHealth -= amount;        
         if (curHealth <= 0)
