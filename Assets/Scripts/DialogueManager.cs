@@ -16,7 +16,6 @@ public class DialogueManager : MonoBehaviour
     private string currentChoiceContext;
     private Dialogue currentDialogue;
     private Dialogue tempDialogue;
-    private Sentence additionalSentence;
     public Animator animator;
 
     private Queue<Sentence> sentences;
@@ -134,17 +133,28 @@ public class DialogueManager : MonoBehaviour
                 if (GameManager.Instance.state == GameState.Start)
                 {
                     Debug.Log("No");
-                    additionalSentence = gameObject.AddComponent<Sentence>();
-                    additionalSentence.speakerName = "Friend A";
-                    additionalSentence.sentence = "Come on! Focus up!";
-                    Sentence[] tempSentences = new Sentence[currentDialogue.sentences.Length + 1];
-                    Debug.Log("tempSentences.Length: " + tempSentences.Length);
+                    Sentence additionalSentence = gameObject.AddComponent<Sentence>();
+                    additionalSentence.speakerName = "Commander";
+                    additionalSentence.sentence = "Focus up!";
+                    Sentence additionalSentence1 = gameObject.AddComponent<Sentence>();
+                    additionalSentence1.speakerName = "Commander";
+                    additionalSentence1.sentence = "Your mission is to take down the enemy commander.";
+                    Sentence additionalSentence2 = gameObject.AddComponent<Sentence>();
+                    additionalSentence2.speakerName = "Commander";
+                    additionalSentence2.sentence = "Do you understand your mission?";
+                    Choice tempchoice = gameObject.AddComponent<Choice>();
+                    tempchoice.choices = new string[] {"No", "Yes"};
+                    tempchoice.choiceContext =  "IntroDecision";
+                    additionalSentence2.choice = tempchoice;
+                    Sentence additionalSentence3 = gameObject.AddComponent<Sentence>();
+                    additionalSentence3.speakerName = "Commander";
+                    additionalSentence3.sentence = "Good! Move out!";
+                    Sentence[] tempSentences = new Sentence[4];
                     tempSentences[0] = additionalSentence;
-                    for (int i = 1; i < tempSentences.Length; i++)
-                    {
-                        Debug.Log("i: " + i);
-                        tempSentences[i] = currentDialogue.sentences[i - 1];
-                    }
+                    tempSentences[1] = additionalSentence1;
+                    tempSentences[2] = additionalSentence2;
+                    tempSentences[3] = additionalSentence3;
+
                     Dialogue tempDialogue = gameObject.AddComponent<Dialogue>();
                     tempDialogue.sentences = tempSentences;
                     GameManager.Instance.updateGameState(GameState.DialogueLoop);

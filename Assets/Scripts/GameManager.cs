@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     public Door[] doorsInFightState;
     // public GameObject[] enemiesInFightState;
 
+    [Header("Spare State Settings")]
+    public Door[] doorsInSpareState;
+
     [Header("Save State Settings")]
     public Door[] doorsInSaveState;
     // public GameObject[] enemiesInSaveState;
@@ -147,8 +150,6 @@ public class GameManager : MonoBehaviour
     private void HandleFightState(){
         ResetObjectStates();
         ToggleDoors(doorsInFightState);
-        GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
-        GameObject.Find("DialogueManager").GetComponent<DialogueManager>().OneLineDialogue("(A door opens in the distance)");
     }
     private void HandleAfterFightState(){
         ResetObjectStates();

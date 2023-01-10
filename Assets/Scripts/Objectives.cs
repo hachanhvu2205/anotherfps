@@ -149,7 +149,9 @@ public class Objectives : MonoBehaviour
             else
             {
                 objectives[1] = "Objective Completed";
-                GameManager.Instance.updateGameState(GameState.Fight);
+                GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+                GameObject.Find("VolcanoDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+                GameObject.Find("DialogueManager").GetComponent<DialogueManager>().OneLineDialogue("(A door opens in the distance)");
             }
         }
         else if (GameManager.Instance.state == GameState.Fight)
