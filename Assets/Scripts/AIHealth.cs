@@ -36,7 +36,7 @@ public class AIHealth : MonoBehaviour
         GetComponent<Animator>().SetTrigger("Die");
         alive = false;
         // GetComponent<Rigidbody>().velocity = Vector3.zero;
-        Destroy(gameObject,2f);
+        Destroy(gameObject,1f);
     }
 
 }

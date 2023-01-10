@@ -23,15 +23,15 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         distanceToTarget = Vector3.Distance(target.position, transform.position);
-        if(haveEngaged){
-            if(distanceToTarget >= 10f && timeRemaining >0){
-            timeRemaining-=Time.deltaTime;
-            Debug.Log(timeRemaining.ToString());
-        } else if(distanceToTarget <=10f && timeRemaining>0){
-            timeRemaining=10;
-            Debug.Log("Reset");
-        }
-        }
+        // if(haveEngaged){
+        //     if(distanceToTarget >= 10f && timeRemaining >0){
+        //     timeRemaining-=Time.deltaTime;
+        //     Debug.Log(timeRemaining.ToString());
+        // } else if(distanceToTarget <=10f && timeRemaining>0){
+        //     timeRemaining=10;
+        //     Debug.Log("Reset");
+        // }
+        // }
         
          if(isProvoked && GetComponent<AIHealth>().alive ) {
             EngageTarget();
@@ -41,7 +41,7 @@ public class EnemyMovement : MonoBehaviour
         }
     }
     void EngageTarget() {
-        haveEngaged = true;
+        //haveEngaged = true;
         FaceTarget();
         if(distanceToTarget >= navMeshAgent.stoppingDistance) {
             ChaseTarget();
@@ -52,7 +52,7 @@ public class EnemyMovement : MonoBehaviour
     }
 
     void ChaseTarget() {
-        GetComponent<Animator>().SetBool("Idle",true);
+        GetComponent<Animator>().SetBool("Idle",false);
         GetComponent<Animator>().SetBool("Die",false);
         GetComponent<Animator>().SetTrigger("Move");
         
