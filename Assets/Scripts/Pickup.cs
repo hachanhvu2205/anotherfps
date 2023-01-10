@@ -6,6 +6,9 @@ public class Pickup : MonoBehaviour
     public string itemName;
     public int rotationSpeed = 100;
 
+    public bool onlyOnSpecificStates;
+    public GameState[] enabledInStates;
+
     private AudioSource source
     {
         get { return GetComponent<AudioSource>(); }
@@ -19,11 +22,35 @@ public class Pickup : MonoBehaviour
         downVector = transform.position - Vector3.up / 2;
         upVector = transform.position;
         StartCoroutine(MoveDown());
+        GameManager.OnGameStateChanged += PickupOnOnGameStateChanged;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChanged -= PickupOnOnGameStateChanged;
     }
 
     private void Update()
     {
         transform.Rotate(Vector3.up * Time.deltaTime * rotationSpeed);
+    }
+
+    private void PickupOnOnGameStateChanged(GameState gameState)
+    {
+        if(onlyOnSpecificStates) {
+            foreach(GameState state in enabledInStates) {
+                if(state == gameState) {
+                    Debug.Log("Pickup " + gameObject.name + " is enabled in state " + gameState);
+                    gameObject.SetActive(true);
+                    return;
+                }
+            }
+            Debug.Log("Pickup " + gameObject.name + " is disabled in state " + gameState);
+            gameObject.SetActive(false);
+        }
+        else {
+            gameObject.SetActive(true);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

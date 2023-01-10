@@ -5,6 +5,7 @@ public class Door : MonoBehaviour
 {
     public float closeTime = 5f;
 
+
     private AudioSource source
     {
         get { return GetComponent<AudioSource>(); }
@@ -12,6 +13,11 @@ public class Door : MonoBehaviour
     private Animator doorAnim
     {
         get { return transform.parent.Find("door").GetComponent<Animator>(); }
+    }
+
+    private void Start()
+    {
+        
     }
 
 	private void OnTriggerEnter(Collider other)

@@ -12,14 +12,21 @@ public class Plane : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if(player.hasItems.Exists(x => x.Equals("GasCan")))
             {                
+                GameManager.Instance.updateGameState(GameState.Escaped);
+                EscapedScreen();
                 GameObject plane = Instantiate(flyingPlane);
                 plane.transform.SetParent(transform.parent);
-                FindObjectOfType<GameManager>().SendMessage("RestartGame", 5);
+                FindObjectOfType<GameManager>().SendMessage("RestartGame", 4);
                 Destroy(player.gameObject);
                 cutsceneCamera.GetComponent<Camera>().enabled = true;
                 cutsceneCamera.GetComponent<AudioListener>().enabled = true;
                 Destroy(gameObject);
             }
         }
+    }
+
+    private void EscapedScreen()
+    {
+        GameObject.Find("HUD").transform.Find("Escaped").gameObject.SetActive(true);
     }
 }

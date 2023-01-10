@@ -39,9 +39,11 @@ public class Player : MonoBehaviour
     private Vector3 camRotation;
     private int curHealth = _maxHealth;
     private int curAmmo;
+    private int kills;
     private List<string> gotItems = new List<string>(4);
     private bool gotWeapon;
     private bool gotKey;
+    private bool paused;
     private float walkTime;
 
     // Events
@@ -53,6 +55,10 @@ public class Player : MonoBehaviour
     public static event ItemUpdateHandler ItemUpdate;
     public delegate void PauseHandler(bool pause);
     public static event PauseHandler PauseEvent;
+    public delegate void DeathHandler(bool dead);
+    public static event DeathHandler DeathEvent;
+    public delegate void KillHandler(int kills);
+    public static event KillHandler KillUpdate;
 
     // Customizeable Variables
     public GameObject riflePrefab;
@@ -93,14 +99,16 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        
+        if (DialogueManager.DialogueIsOpen || curHealth <= 0) return;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Pause();
+        }
+        if (paused) return;
         Shoot();
         Rotate();
         Move();
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            bool pause = Time.timeScale > 0 ? true : false;
-            PauseEvent(pause);
-        }
         #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Bypass();
         #endif
@@ -110,7 +118,18 @@ public class Player : MonoBehaviour
     private void Bypass()
     {
         if (Input.GetKeyDown(KeyCode.F1))
-            gotKey = true;
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                GetRifle();
+                GameManager.Instance.updateGameState(GameState.FindGun);
+            }
+            else
+            {
+                gotKey = true;
+                GameManager.Instance.updateGameState(GameState.FindKey);
+            }
+        }   
         else if (Input.GetKeyDown(KeyCode.F2))
             GetItem("Battery");
         else if (Input.GetKeyDown(KeyCode.F3))
@@ -119,6 +138,40 @@ public class Player : MonoBehaviour
             GetItem("MediumBattery");
         else if (Input.GetKeyDown(KeyCode.F5))
             GetItem("GasCan");
+        else if (Input.GetKeyDown(KeyCode.F6))
+            GameManager.Instance.updateGameState(GameState.Start);
+        else if (Input.GetKeyDown(KeyCode.F7))
+            GameManager.Instance.updateGameState(GameState.Fight);
+        else if (Input.GetKeyDown(KeyCode.F8))
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+                GameManager.Instance.updateGameState(GameState.Save);
+            else
+                GameManager.Instance.updateGameState(GameState.Escape);
+        }
+        else if (Input.GetKeyDown(KeyCode.F9))
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+                UpdateSpawnpoint(GameObject.Find("SpawnPoint").transform);
+            else 
+                UpdateSpawnpoint(GameObject.Find("SpawnPoint (1)").transform);
+            Respawn();
+        }
+        else if (Input.GetKeyDown(KeyCode.F10))
+        {
+            UpdateSpawnpoint(GameObject.Find("SpawnPoint (2)").transform);
+            Respawn();
+        }
+        else if (Input.GetKeyDown(KeyCode.F11))
+        {
+            UpdateSpawnpoint(GameObject.Find("SpawnPoint (3)").transform);
+            Respawn();
+        }
+        else if (Input.GetKeyDown(KeyCode.F12))
+        {
+            UpdateSpawnpoint(GameObject.Find("SpawnPoint (4)").transform);
+            Respawn();
+        }
     }
     #endif
 
@@ -184,8 +237,17 @@ public class Player : MonoBehaviour
                 Vector3 dir = target - cam.position;
                 Ray ray = new Ray(cam.position, dir.normalized);
                 RaycastHit hit;
+                if(Physics.Raycast(ray,out hit,shootRange))
+                {
+                    if(hit.transform.gameObject.tag=="Enemy")
+                    {
+                        hit.transform.parent.GetComponent<Soldier>().Hit();
+                    }
+                }
+                
                 if (Physics.Raycast(ray, out hit, shootRange))
                 {
+                   
                     hit.collider.SendMessage("TakeDamage", SendMessageOptions.DontRequireReceiver);
                     GameObject hitFlare = Instantiate(feedbackPrefab, hit.point, Quaternion.identity) as GameObject;
                     Destroy(hitFlare, 0.2f);
@@ -212,14 +274,16 @@ public class Player : MonoBehaviour
     /// Takes a given amount of damage
     /// </summary>
     /// <param name="amount">The amount of damage to take</param>
-    private void TakeDamage(int amount)
+    public void TakeDamage(int amount)
     {
         curHealth -= amount;        
         if (curHealth <= 0)
         {
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
-            curHealth = maxHealth;
+            
+            // transform.position = spawnPoint.position;
+            // transform.rotation = spawnPoint.rotation;
+            // curHealth = maxHealth;
+            DeathEvent(true);
         }
         source.pitch = Random.Range(0.8f, 1.2f);
         source.PlayOneShot(hitSound);
@@ -249,6 +313,7 @@ public class Player : MonoBehaviour
     /// <param name="amount">The amount of ammo to pick</param>
     private void TakeAmmo(int amount)
     {
+        Debug.Log("Got " + ammoAmount + " Ammo");
         curAmmo += amount;
         if (curAmmo > _maxAmmo)
             curAmmo = _maxAmmo;
@@ -263,6 +328,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void GetRifle()
     {
+        Debug.Log("Got Rifle");
         source.pitch = Random.Range(0.8f, 1.2f);
         source.PlayOneShot(pickAmmoSound);
         GameObject rifle = Instantiate(riflePrefab, weaponSlot.position, Quaternion.identity) as GameObject;
@@ -280,6 +346,7 @@ public class Player : MonoBehaviour
     /// <param name="itemName">The item to get</param>
     private void GetItem(string itemName)
     {
+        Debug.Log("Got " + itemName);
         switch (itemName)
         {
             case "Key":
@@ -303,5 +370,29 @@ public class Player : MonoBehaviour
                 ItemUpdate(itemName);
                 break;
         }
+    }
+
+    public void Pause() {
+        paused = Time.timeScale > 0 ? true : false;
+        PauseEvent(paused);
+    }
+
+    public void Respawn() {
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+        curHealth = maxHealth;
+        HealthUpdate(curHealth);
+        GameObject.Find("HUD").transform.Find("Timer").GetComponent<Timer>().SetTimeRemaining(180);
+        DeathEvent(false);
+    }
+
+    public void SetKills(int kills) {
+        this.kills = kills; 
+        KillUpdate(this.kills);
+    }
+    public void AddKill()
+    {
+        kills++;
+        KillUpdate(kills);
     }
 }
