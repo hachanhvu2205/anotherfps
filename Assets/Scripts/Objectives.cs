@@ -159,20 +159,20 @@ public class Objectives : MonoBehaviour
                 GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
                     
 
-                // Dialogue localDialogue = gameObject.AddComponent<Dialogue>();
-                // localDialogue.sentences = new Sentence[2];
-                // Sentence localSentence1 = gameObject.AddComponent<Sentence>();
-                // localSentence1.speakerName = "Alpha";
-                // localSentence1.sentence = "There are two doors out of this area.";
-                // Sentence localSentence2 = gameObject.AddComponent<Sentence>();
-                // localSentence2.sentence = "Which way should I go to find the commander?";
+                Dialogue localDialogue = gameObject.AddComponent<Dialogue>();
+                localDialogue.sentences = new Sentence[2];
+                Sentence localSentence1 = gameObject.AddComponent<Sentence>();
+                localSentence1.speakerName = "Alpha";
+                localSentence1.sentence = "There are two doors out of this area.";
+                Sentence localSentence2 = gameObject.AddComponent<Sentence>();
+                localSentence2.sentence = "Which way should I go to find the commander?";
                 // Choice localChoice = gameObject.AddComponent<Choice>();
                 // localChoice.choiceContext = "KillDoorBranch";
                 // localChoice.choices = new string[2]{ "Left door", "Right door"};
                 // localSentence2.choice = localChoice; 
-                // localDialogue.sentences[0] = localSentence1;
-                // localDialogue.sentences[1] = localSentence2;
-                // GameObject.Find("DialogueManager").GetComponent<DialogueManager>().StartDialogue(localDialogue);
+                localDialogue.sentences[0] = localSentence1;
+                localDialogue.sentences[1] = localSentence2;
+                GameObject.Find("DialogueManager").GetComponent<DialogueManager>().StartDialogue(localDialogue);
             }
         }
         else if (GameManager.Instance.state == GameState.Fight)
