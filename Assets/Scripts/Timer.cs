@@ -34,6 +34,7 @@ public class Timer : MonoBehaviour
             {
                 timeRemaining = 0;
                 timerEnabled = false;
+                FindObjectOfType<Player>().GetComponent<Player>().TakeDamage(1000);
             }
             DisplayTime(timeRemaining);
         }
@@ -48,7 +49,7 @@ public class Timer : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}.{2:00}", minutes, seconds, milliseconds);
     }
 
-    public void setTimeRemaining(float time)
+    public void SetTimeRemaining(float time)
     {
         timeRemaining = time;
         timerEnabled = true;
@@ -59,7 +60,7 @@ public class Timer : MonoBehaviour
         Debug.Log("Timer Handling game state changed: " + state);
         if (state == GameState.Escape)
         {
-            setTimeRemaining(400);
+            SetTimeRemaining(400);
             timerEnabled = true;
             timer.SetActive(true);
         }

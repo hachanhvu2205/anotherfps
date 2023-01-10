@@ -376,6 +376,7 @@ public class Player : MonoBehaviour
         transform.rotation = spawnPoint.rotation;
         curHealth = maxHealth;
         HealthUpdate(curHealth);
+        GameObject.Find("HUD").transform.Find("Timer").GetComponent<Timer>().SetTimeRemaining(180);
         DeathEvent(false);
     }
 
