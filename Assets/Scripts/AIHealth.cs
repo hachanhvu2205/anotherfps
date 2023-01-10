@@ -6,6 +6,8 @@ public class AIHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float currentHealth;
+
+    public bool isCommander;
     public bool alive = true;
     public HealthBar healthBar;
 
@@ -21,9 +23,17 @@ public class AIHealth : MonoBehaviour
         currentHealth -= amount;
         if (currentHealth <= 0f)
         {
-            Die();
+            if (isCommander)
+            {
+                GameManager.Instance.updateGameState(GameState.AfterFight);
+            }
+            else
+            {
+                Die();
            
-            Debug.Log("Fall Death");
+                Debug.Log("Fall Death");
+            }
+            
         }
     }
 

@@ -78,7 +78,7 @@ public class Objectives : MonoBehaviour
         else if (state == GameState.Fight)
         {
             objectives = new string[4];
-            objectives[0] = "Find and defeat the Commander";
+            objectives[0] = "Defeat the Commander";
             objectives[1] = "Defeat 0/10 enemies";
         }
         else if (state == GameState.Save)
@@ -155,21 +155,24 @@ public class Objectives : MonoBehaviour
             else
             {
                 objectives[1] = "Objective Completed";
+                GameObject.Find("VolcanoDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+                GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+                    
 
-                Dialogue localDialogue = gameObject.AddComponent<Dialogue>();
-                localDialogue.sentences = new Sentence[2];
-                Sentence localSentence1 = gameObject.AddComponent<Sentence>();
-                localSentence1.speakerName = "Alpha";
-                localSentence1.sentence = "There are two doors out of this area.";
-                Sentence localSentence2 = gameObject.AddComponent<Sentence>();
-                localSentence2.sentence = "Which way should I go to find the commander?";
-                Choice localChoice = gameObject.AddComponent<Choice>();
-                localChoice.choiceContext = "KillDoorBranch";
-                localChoice.choices = new string[2]{ "Left door", "Right door"};
-                localSentence2.choice = localChoice; 
-                localDialogue.sentences[0] = localSentence1;
-                localDialogue.sentences[1] = localSentence2;
-                GameObject.Find("DialogueManager").GetComponent<DialogueManager>().StartDialogue(localDialogue);
+                // Dialogue localDialogue = gameObject.AddComponent<Dialogue>();
+                // localDialogue.sentences = new Sentence[2];
+                // Sentence localSentence1 = gameObject.AddComponent<Sentence>();
+                // localSentence1.speakerName = "Alpha";
+                // localSentence1.sentence = "There are two doors out of this area.";
+                // Sentence localSentence2 = gameObject.AddComponent<Sentence>();
+                // localSentence2.sentence = "Which way should I go to find the commander?";
+                // Choice localChoice = gameObject.AddComponent<Choice>();
+                // localChoice.choiceContext = "KillDoorBranch";
+                // localChoice.choices = new string[2]{ "Left door", "Right door"};
+                // localSentence2.choice = localChoice; 
+                // localDialogue.sentences[0] = localSentence1;
+                // localDialogue.sentences[1] = localSentence2;
+                // GameObject.Find("DialogueManager").GetComponent<DialogueManager>().StartDialogue(localDialogue);
             }
         }
         else if (GameManager.Instance.state == GameState.Fight)
