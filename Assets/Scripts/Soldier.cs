@@ -150,7 +150,7 @@ public class Soldier : MonoBehaviour{
             sentence.choice = choice;
             dialogue.sentences[0] = sentence;
             FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
-            gameObject.GetComponent<AIHealth>().TakeDamage(10);
+            gameObject.GetComponent<AIHealth>().GotDamage(10);
         }
     }
 

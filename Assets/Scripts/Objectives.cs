@@ -50,7 +50,7 @@ public class Objectives : MonoBehaviour
             objectives = new string[4];
             objectives[0] = "Infiltrate the enemy base";
             objectives[1] = "Choose Save: Find the key to open door";
-            objectives[2] = "Choose Fight: Defeat 0/3 enemies to open door";
+            objectives[2] = "Choose Fight: Find a gun to defeat enemies";
         }
         else if (state == GameState.FindKey)
         {
@@ -79,7 +79,7 @@ public class Objectives : MonoBehaviour
         {
             objectives = new string[4];
             objectives[0] = "Find and defeat the Commander";
-            objectives[1] = "Defeat 0/6 enemies";
+            objectives[1] = "Defeat 0/10 enemies";
         }
         else if (state == GameState.Save)
         {
@@ -155,9 +155,9 @@ public class Objectives : MonoBehaviour
         }
         else if (GameManager.Instance.state == GameState.Fight)
         {
-            if (kills < 6)
+            if (kills < 10)
             {
-                objectives[1] = "Defeat " + kills + "/6 enemies";
+                objectives[1] = "Defeat " + kills + "/10 enemies";
             }
             else
             {
