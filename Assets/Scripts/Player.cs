@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     private bool gotWeapon;
     private bool gotKey;
     private float walkTime;
-
+     private Animator mAnimator;
     // Events
     public delegate void HealthUpdateHandler(int curHealth);
     public static event HealthUpdateHandler HealthUpdate;
@@ -188,7 +188,19 @@ public class Player : MonoBehaviour
                 {
                     if(hit.transform.gameObject.tag=="Enemy")
                     {
-                        hit.transform.parent.GetComponent<Soldier>().Hit();
+                        // Destroy(hit.transform.gameObject);
+                       AIHealth enemy = hit.transform.GetComponent<AIHealth>();
+                        if(enemy == null) return;
+                    //     if(enemy.currentHealth <=0){
+                    //         hit.transform.GetComponent<Animator>().SetTrigger("Die");
+                    //     }
+                        enemy.GotDamage(20f);
+                    //    hit.transform.gameObject.GetComponent<Animator>().SetBool("Idle",true);
+                    //    hit.transform.GetComponent<Animator>().SetBool("Move",false);
+                        // hit.transform.gameObject.GetComponent<Animator>().SetTrigger("Die");
+                        // Destroy(hit.transform.gameObject,1f);
+                        // mAnimator.SetTrigger("Die");
+                        // hit.transform.parent.GetComponent<Soldier>().Hit();
                     }
                 }
                 
