@@ -167,6 +167,15 @@ public class DialogueManager : MonoBehaviour
                     StartDialogue(currentDialogue);
                 }
                 break;
+            case "KillDoorBranch":
+                if (GameManager.Instance.state == GameState.FindGunEnter)
+                {
+                    Debug.Log("Left door");
+                    GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+                    EndDialogue();
+                    OneLineDialogue("The left door opened");
+                }
+                break;
             case "FightOrSave":
                 if (GameManager.Instance.state == GameState.Start)
                 {
@@ -204,6 +213,15 @@ public class DialogueManager : MonoBehaviour
                 GameManager.Instance.updateGameState(GameState.Start);
                 StopTyping();
                 DisplayNextSentence();
+                break;
+            case "KillDoorBranch":
+                if (GameManager.Instance.state == GameState.FindGunEnter)
+                {
+                    Debug.Log("Right door");
+                    GameObject.Find("VolcanoDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
+                    EndDialogue();
+                    OneLineDialogue("The right door opened");
+                }
                 break;
             case "FightOrSave":
                 Debug.Log("Save");
