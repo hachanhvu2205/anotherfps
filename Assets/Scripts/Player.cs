@@ -99,12 +99,13 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !DialogueManager.DialogueIsOpen)
+        
+        if (DialogueManager.DialogueIsOpen || curHealth <= 0) return;
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            paused = Time.timeScale > 0 ? true : false;
-            PauseEvent(paused);
+            Pause();
         }
-        if (paused || DialogueManager.DialogueIsOpen) return;
+        if (paused) return;
         Shoot();
         Rotate();
         Move();
@@ -369,6 +370,11 @@ public class Player : MonoBehaviour
                 ItemUpdate(itemName);
                 break;
         }
+    }
+
+    public void Pause() {
+        paused = Time.timeScale > 0 ? true : false;
+        PauseEvent(paused);
     }
 
     public void Respawn() {

@@ -125,6 +125,11 @@ public class HudControl : MonoBehaviour
         health.value = percentage;
     }
 
+    public void Resume() {
+        player = GameObject.Find("Player").GetComponent<Player>();
+        player.Pause();
+    }
+
     public void Retry() {
         player = GameObject.Find("Player").GetComponent<Player>();
         player.Respawn();
