@@ -165,6 +165,8 @@ public class GameManager : MonoBehaviour
     private void HandleSpareState() {
         ResetObjectStates();
         ToggleDoors(doorsInSpareState);
+        GameObject.Find("Cliff").transform.Find("CliffTurrets").gameObject.SetActive(false);
+        GameObject.Find("Cliff").transform.Find("Commander").gameObject.SetActive(false);
     }
     private void HandleSaveState() {
         ResetObjectStates();

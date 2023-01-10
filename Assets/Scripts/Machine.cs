@@ -53,7 +53,7 @@ public class Machine : MonoBehaviour
             if (activated == 3)
             {
                 Instantiate(itemPrefabs[activated], items[activated].position, Quaternion.identity);
-                FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
+                if (GameManager.Instance.state == GameState.Escape) FindObjectOfType<DialogueManager>().StartDialogue(dialogue);
             }
         }
     }

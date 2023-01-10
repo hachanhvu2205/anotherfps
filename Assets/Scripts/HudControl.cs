@@ -64,7 +64,7 @@ public class HudControl : MonoBehaviour
 
     private void DisplayItemModule(GameState state)
     {
-        if (state == GameState.Escape)
+        if (state == GameState.Escape || state == GameState.Spare)
             itemModule.gameObject.SetActive(true);
         else
             itemModule.gameObject.SetActive(false);

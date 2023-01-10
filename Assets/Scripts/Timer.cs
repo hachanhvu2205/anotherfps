@@ -64,6 +64,12 @@ public class Timer : MonoBehaviour
             timerEnabled = true;
             timer.SetActive(true);
         }
+        else if (state == GameState.Spare)
+        {
+            SetTimeRemaining(300);
+            timerEnabled = true;
+            timer.SetActive(true);
+        }
         else if (state == GameState.Escaped)
         {
             timerEnabled = false;

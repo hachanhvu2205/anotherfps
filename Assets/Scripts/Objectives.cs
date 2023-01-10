@@ -86,6 +86,12 @@ public class Objectives : MonoBehaviour
             objectives = new string[4];
             objectives[0] = "Find the Commander";
         }
+        else if (state == GameState.Spare)
+        {
+            objectives = new string[4];
+            objectives[0] = "Escape the island before it explodes";
+            objectives[1] = "Find a way to power the plane";
+        }
         else if (state == GameState.Escape)
         {
             objectives = new string[4];
