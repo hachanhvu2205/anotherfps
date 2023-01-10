@@ -30,12 +30,13 @@ public class AIHealth : MonoBehaviour
     void Die()
     {
         healthBar.SetHealth(0);
-        GetComponent<Animator>().SetBool("Idle",false);
+        GetComponent<Animator>().SetBool("Idle",true);
         // GetComponent<EnemyMovement>().alive = false;
         // GetComponent<Animator>().SetTrigger("Die");
         GetComponent<Animator>().SetTrigger("Die");
         alive = false;
         // GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GameObject.Find("Player").GetComponent<Player>().AddKill();
         Destroy(gameObject,1f);
     }
 

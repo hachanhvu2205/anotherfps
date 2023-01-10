@@ -11,8 +11,8 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField]float turnSpeed = 5f;
     float distanceToTarget = Mathf.Infinity;
     public float timeRemaining = 10;
-    bool isProvoked = false;
-    bool haveEngaged = false;
+    public bool isProvoked = false;
+    public bool haveEngaged = false;
 
 
     void Start()
@@ -33,7 +33,7 @@ public class EnemyMovement : MonoBehaviour
         // }
         // }
         
-         if(isProvoked && GetComponent<AIHealth>().alive ) {
+        if( isProvoked && GetComponent<AIHealth>().alive ) {
             EngageTarget();
         }
         else if(distanceToTarget <= chaseRange) {
@@ -46,7 +46,7 @@ public class EnemyMovement : MonoBehaviour
         if(distanceToTarget >= navMeshAgent.stoppingDistance) {
             ChaseTarget();
         }
-        else if(distanceToTarget <= navMeshAgent.stoppingDistance) {
+        else if( distanceToTarget <= navMeshAgent.stoppingDistance) {
             AttackTarget();
         } 
     }

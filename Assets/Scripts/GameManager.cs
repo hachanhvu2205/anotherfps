@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
     private void HandleFindKeyEnterState(){
         ResetObjectStates();
         ToggleDoors(doorsInFindKeyEnterState);
+        GameObject.Find("Cliff").transform.Find("CliffTurrets").gameObject.SetActive(false);
     }
 
     private void HandleFindGunEnterState(){
@@ -159,7 +160,7 @@ public class GameManager : MonoBehaviour
     private void HandleKillState() {
         ResetObjectStates();
         GameObject.Find("HUD").transform.Find("KillScreen").gameObject.SetActive(true);
-        FindObjectOfType<GameManager>().SendMessage("RestartGame", 4);
+        FindObjectOfType<GameManager>().SendMessage("RestartGame", 10);
     }
     private void HandleSpareState() {
         ResetObjectStates();
@@ -172,6 +173,7 @@ public class GameManager : MonoBehaviour
     private void HandleEscapeState(){
         ResetObjectStates();
         ToggleDoors(doorsInEscapeState);
+        GameObject.Find("Cliff").transform.Find("CliffTurrets").gameObject.SetActive(false);
     }
     private void HandleEscapedState(){
         ResetObjectStates();

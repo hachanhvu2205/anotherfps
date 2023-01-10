@@ -12,6 +12,8 @@ public class AIGun : MonoBehaviour
     }
 
     // Custom Variables
+
+    public bool isCommanderGun;
     public bool rotate = true;
     
     public int rotationSpeed = 125;
@@ -62,7 +64,7 @@ public class AIGun : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (state != State.Engaged && other.tag == "Player")
+        if ((isCommanderGun && !CheckIfSaveState()) && state != State.Engaged && other.tag == "Player")
         {
             Vector3 dir = other.transform.position - tBase.position;
             float angle = Vector3.Angle(dir, tBase.forward);
@@ -170,5 +172,12 @@ public class AIGun : MonoBehaviour
         
         if (state == State.Search)
             StartCoroutine(DefaultUpdate());
+    }
+    bool CheckIfSaveState() {
+        if (GameManager.Instance.state == GameState.Escape
+            || GameManager.Instance.state == GameState.Save
+            || GameManager.Instance.state == GameState.FindKeyEnter)
+            return true;
+        return false;
     }
 }
