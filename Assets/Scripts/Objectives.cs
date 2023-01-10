@@ -79,7 +79,7 @@ public class Objectives : MonoBehaviour
         {
             objectives = new string[4];
             objectives[0] = "Find and defeat the Commander";
-            objectives[1] = "Defeat 0/8 enemies";
+            objectives[1] = "Defeat 0/6 enemies";
         }
         else if (state == GameState.Save)
         {
@@ -151,14 +151,13 @@ public class Objectives : MonoBehaviour
                 objectives[1] = "Objective Completed";
                 GameObject.Find("CliffDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
                 GameObject.Find("VolcanoDoor").GetComponentInChildren<Door>().gameObject.SendMessage("ToggleDoor", true, SendMessageOptions.DontRequireReceiver);
-                GameObject.Find("DialogueManager").GetComponent<DialogueManager>().OneLineDialogue("(A door opens in the distance)");
             }
         }
         else if (GameManager.Instance.state == GameState.Fight)
         {
-            if (kills < 8)
+            if (kills < 6)
             {
-                objectives[1] = "Defeat " + kills + "/8 enemies";
+                objectives[1] = "Defeat " + kills + "/6 enemies";
             }
             else
             {

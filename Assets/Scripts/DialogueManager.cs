@@ -201,17 +201,11 @@ public class DialogueManager : MonoBehaviour
         {
             case "IntroDecision":
                 Debug.Log("Yes");
-                if (GameManager.Instance.state == GameState.DialogueLoop)
-                {
-                }
                 GameManager.Instance.updateGameState(GameState.Start);
                 StopTyping();
                 DisplayNextSentence();
                 break;
             case "FightOrSave":
-                if (GameManager.Instance.state == GameState.Start)
-                {
-                }
                 Debug.Log("Save");
                 GameManager.Instance.updateGameState(GameState.Save);
                 StopTyping();
