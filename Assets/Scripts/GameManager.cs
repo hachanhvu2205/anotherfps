@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
     }
     private void HandleSpareState() {
         ResetObjectStates();
-        ToggleDoors(doorsInEscapeState);
+        ToggleDoors(doorsInSpareState);
     }
     private void HandleSaveState() {
         ResetObjectStates();
