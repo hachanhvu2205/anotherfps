@@ -161,6 +161,8 @@ public class GameManager : MonoBehaviour
         ResetObjectStates();
         GameObject.Find("HUD").transform.Find("KillScreen").gameObject.SetActive(true);
         FindObjectOfType<GameManager>().SendMessage("RestartGame", 10);
+        GameObject.Find("Cliff").transform.Find("CliffTurrets").gameObject.SetActive(false);
+        GameObject.Find("Cliff").transform.Find("Commander").gameObject.SetActive(false);
     }
     private void HandleSpareState() {
         ResetObjectStates();
