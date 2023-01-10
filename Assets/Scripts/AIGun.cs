@@ -1,166 +1,183 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using System.Collections;
 
+[RequireComponent(typeof(Collider))]
 public class AIGun : MonoBehaviour
 {
-    public GameObject Player;
-    public float Distance;
-
-    public bool isAngered;
-
-    public NavMeshAgent _agent;
-
-    [Header("Gun Settings")]
-    public float fireRate = 0.1f;
-    public int clipSize = 30;
-    public float range = 100;
-    public float impactForce = 30f;
-    public float damage = 10;
-    public int reservedAmmoCapacity = 270;
-
-    public Camera fpsCam;
-    public GameObject impactEffect;
-
-    //Variables that change thrue out the code
-    bool _canShoot;
-    int _currentAmmoInClip;
-    int _ammoInReserve;
-
-    //Muzzle Flash
-    //public Image muzzleFlashImage;
-    //public Sprite[] flashes;
-
-    //Aiming
-    public Vector3 normalLocalPosition;
-    public Vector3 aimingLocalPosition;
-
-    public float aimSmoothing = 10;
-
-    //WeaponRecoil
-    public bool randomizeRecoil;
-    public Vector2 randomRecoilConstraints;
-    //You only need to assigns this if randomize recoil is off
-    public Vector2 recoilPattern;
-
-
-    void Start()
+    private enum State
     {
-        _currentAmmoInClip = clipSize;
-        _ammoInReserve = reservedAmmoCapacity;
-        _canShoot = true;
+        Default,
+        Engaged,
+        Search
     }
 
-    void Update()
+    // Custom Variables
+
+    public bool isCommanderGun;
+    public bool rotate = true;
+    
+    public int rotationSpeed = 125;
+    
+    public float engagedSpeed = 2.5f;
+    
+    public float shootCooldown = 1f;
+  
+    public int maxHealth = 5;
+    
+    public float searchTime = 3f;
+    public AudioClip hitSound;
+    public GameObject turretBullet;
+    public GameObject explosionPrefab;
+    public GameObject smokePrefab;
+
+    // Object Variables
+    private State state;
+    private AudioSource source
     {
-        Distance = Vector3.Distance(Player.transform.position, this.transform.position);
+        get { return GetComponent<AudioSource>(); }
+    }
+    private Transform tBase
+    {
+        get { return transform.GetChild(0); }
+    }
+    private Transform tWeapon
+    {
+        get { return tBase.GetChild(0); }
+    }
+    private Transform tOrigin
+    {
+        get { return tWeapon.GetChild(0); }
+    }
+    private Vector3 rotateDir;
+    private float sightRadius
+    {
+        get { return transform.Find("Collider").GetComponent<SphereCollider>().radius; }
+    }
+    private int health;
 
-        if (Distance <= 50)
+    private void Start()
+    {
+        health = maxHealth;
+        rotateDir = Random.Range(0, 1f) > 0.5f ? Vector3.up : Vector3.down;
+        StartCoroutine(DefaultUpdate());
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if ((isCommanderGun && !CheckIfSaveState()) && state != State.Engaged && other.tag == "Player")
         {
-            isAngered = true;
-        }
-
-        if (Distance > 50f)
-        {
-            isAngered = false;
-        }
-
-        if (isAngered)
-        {
-            _agent.isStopped = false;
-            _agent.SetDestination(Player.transform.position);
-
-            DetermineAim();
-            if (Input.GetMouseButton(0) && _canShoot && _currentAmmoInClip > 0)
+            Vector3 dir = other.transform.position - tBase.position;
+            float angle = Vector3.Angle(dir, tBase.forward);
+            if (angle < 55)
             {
-                _canShoot = false;
-                _currentAmmoInClip--;
-                StartCoroutine(ShootGun());
-            }
-            else if (Input.GetKeyDown(KeyCode.R) && _currentAmmoInClip < clipSize && _ammoInReserve > 0)
-            {
-                int amountNeeded = clipSize - _currentAmmoInClip;
-                if (amountNeeded >= _ammoInReserve)
+                RaycastHit hit;
+                if (Physics.Raycast(tBase.transform.position, dir.normalized, out hit, sightRadius))
                 {
-                    _currentAmmoInClip += _ammoInReserve;
-                    _ammoInReserve -= amountNeeded;
-                }
-                else
-                {
-                    _currentAmmoInClip = clipSize;
-                    _ammoInReserve -= amountNeeded;
+                    if (hit.collider.tag == "Player")
+                        StartCoroutine(EngagedUpdate(hit.transform));
                 }
             }
-
         }
+    }
 
-        if (!isAngered)
+    private void OnTriggerExit(Collider other)
+    {
+        if (state == State.Engaged && other.tag == "Player")
+            StartCoroutine(SearchUpdate());
+    }
+
+    /// <summary>
+    /// Decrements health when damage taken and handle death event
+    /// </summary>
+    private void TakeDamage()
+    {
+        health--;
+        source.pitch = Random.Range(0.8f, 1.2f);
+        source.PlayOneShot(hitSound);
+        if (health <= 0)
         {
-            _agent.isStopped = true;
+            Instantiate(explosionPrefab, tBase.position, Quaternion.identity);
+            Instantiate(smokePrefab, tBase.position, Quaternion.identity);            
+            Destroy(tWeapon.gameObject);
+            Destroy(tBase.gameObject);
+            enabled = false;
+            Destroy(this);
         }
     }
 
-    void DetermineAim()
+    /// <summary>
+    /// Continuously rotates the turret to search for targets
+    /// </summary>
+    private IEnumerator DefaultUpdate()
     {
-        Vector3 target = normalLocalPosition;
-        if (Input.GetMouseButton(1)) target = aimingLocalPosition;
-
-        Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
-
-        transform.localPosition = desiredPosition;
-    }
-
-    void DetermineRecoil()
-    {
-        transform.localPosition -= Vector3.forward * 0.1f;
-    }
-
-    IEnumerator ShootGun()
-    {
-        DetermineRecoil();
-        //StartCoroutine(MuzzleFlash());
-
-        RayCastForEnemy();
-
-        yield return new WaitForSeconds(fireRate);
-        _canShoot = true;
-    }
-
-    /*IEnumerator MuzzleFlash()
-    {
-        muzzleFlashImage.sprite = flashes[Random.Range(0, flashes.Length)];
-        muzzleFlashImage.color = Color.white;
-        yield return new WaitForSeconds(0.05f);
-        muzzleFlashImage.sprite = null;
-        muzzleFlashImage.color = new Color(0, 0, 0, 0);
-    }*/
-    void RayCastForEnemy()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
+        state = State.Default;
+        while (state == State.Default)
         {
-            Debug.Log(hit.transform.name);
-
-            Enemy target = hit.transform.GetComponent<Enemy>();
-            if (target != null)
-            {
-                target.TakeDamage(damage);
-            }
-
-            GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-            Destroy(impactGO, 2f);
-
-            if (hit.rigidbody != null)
-            {
-                hit.rigidbody.AddForce(-hit.normal * impactForce);
-            }
-            //___________________________________________________
-            AIHealth target2 = hit.transform.GetComponent<AIHealth>();
-            if (target2 != null)
-            {
-                target2.TakeDamage(damage);
-            }
+            if (rotate)
+                tBase.Rotate(rotateDir, Time.deltaTime * rotationSpeed);
+            yield return null;
         }
+    }
+
+    /// <summary>
+    /// Rotates the turret aiming for the target
+    /// </summary>
+    /// <param name="target">The target to rotate to</param>
+    private IEnumerator EngagedUpdate(Transform target)
+    {
+        state = State.Engaged;
+        StartCoroutine(EngagedShooting());
+        Vector3 dir;
+        float angle;
+        while (state == State.Engaged)
+        {
+            dir = target.position - tBase.position;
+            tBase.rotation = Quaternion.Lerp(tBase.rotation, Quaternion.LookRotation(dir), Time.deltaTime * engagedSpeed);
+            tWeapon.LookAt(target);
+            angle = tWeapon.localEulerAngles.x;
+            if (angle > 180)
+                angle -= 360;
+            tWeapon.localEulerAngles = new Vector3(Mathf.Clamp(angle, -30, 30), 0, 0);
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Shoots at the target in timed intervals
+    /// </summary>
+    private IEnumerator EngagedShooting()
+    {
+        yield return new WaitForSeconds(shootCooldown);
+        while (state == State.Engaged )
+        {
+            Instantiate(turretBullet, tOrigin.position, tOrigin.rotation);
+            source.pitch = Random.Range(0.8f, 1.2f);
+            source.Play();
+            yield return new WaitForSeconds(shootCooldown);
+        }
+    }
+
+    /// <summary>
+    /// Keeps position waiting for a potential target
+    /// </summary>
+    private IEnumerator SearchUpdate()
+    {
+        state = State.Search;
+        float time = 0;
+        while (state == State.Search && time < searchTime)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+        
+        if (state == State.Search)
+            StartCoroutine(DefaultUpdate());
+    }
+    bool CheckIfSaveState() {
+        if (GameManager.Instance.state == GameState.Escape
+            || GameManager.Instance.state == GameState.Save
+            || GameManager.Instance.state == GameState.FindKeyEnter)
+            return true;
+        return false;
     }
 }
