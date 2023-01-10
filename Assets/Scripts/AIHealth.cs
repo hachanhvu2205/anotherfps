@@ -6,7 +6,7 @@ public class AIHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float currentHealth;
-
+    public bool alive = true;
     public HealthBar healthBar;
 
     void Start()
@@ -15,23 +15,28 @@ public class AIHealth : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
     }
 
-    public void TakeDamage(float amount)
+    public void GotDamage(float amount)
     {
         healthBar.SetHealth(currentHealth);
         currentHealth -= amount;
         if (currentHealth <= 0f)
         {
             Die();
-            currentHealth = maxHealth;
-            healthBar.SetMaxHealth(maxHealth);
-
+           
             Debug.Log("Fall Death");
         }
     }
 
     void Die()
     {
-        Destroy(gameObject);
+        healthBar.SetHealth(0);
+        GetComponent<Animator>().SetBool("Idle",true);
+        // GetComponent<EnemyMovement>().alive = false;
+        // GetComponent<Animator>().SetTrigger("Die");
+        GetComponent<Animator>().SetTrigger("Die");
+        alive = false;
+        // GetComponent<Rigidbody>().velocity = Vector3.zero;
+        Destroy(gameObject,2f);
     }
 
 }

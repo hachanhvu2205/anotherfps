@@ -4,35 +4,71 @@ using UnityEngine;
 using UnityEngine.AI;
 public class EnemyMovement : MonoBehaviour
 {
-    // Start is called before the first frame update
-   public GameObject Player;
-    public float Distance;
+    public NavMeshAgent navMeshAgent;
+    private Animator mAnimator;
+    [SerializeField]Transform target;
+    [SerializeField]float chaseRange = 5f;
+    [SerializeField]float turnSpeed = 5f;
+    float distanceToTarget = Mathf.Infinity;
+    public float timeRemaining = 10;
+    bool isProvoked = false;
+    bool haveEngaged = false;
 
-    public bool isAngered;
-
-    public NavMeshAgent _agent;
 
     void Start()
     {
-
+        navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     void Update()
     {
-        Distance = Vector3.Distance(Player.transform.position, this.transform.position);
-
-        if(GameManager.Instance.state == GameState.Fight)
-        {
-            // Change to Move towards Player and Shoot
-            _agent.isStopped = true;
-        } else if (GameManager.Instance.state == GameState.Save)
-        {
-            _agent.isStopped = false;
-            _agent.SetDestination(Player.transform.position);
+        distanceToTarget = Vector3.Distance(target.position, transform.position);
+        if(haveEngaged){
+            if(distanceToTarget >= 10f && timeRemaining >0){
+            timeRemaining-=Time.deltaTime;
+            Debug.Log(timeRemaining.ToString());
+        } else if(distanceToTarget <=10f && timeRemaining>0){
+            timeRemaining=10;
+            Debug.Log("Reset");
+        }
         }
         
+         if(isProvoked && GetComponent<AIHealth>().alive ) {
+            EngageTarget();
+        }
+        else if(distanceToTarget <= chaseRange) {
+            isProvoked = true;
+        }
+    }
+    void EngageTarget() {
+        haveEngaged = true;
+        FaceTarget();
+        if(distanceToTarget >= navMeshAgent.stoppingDistance) {
+            ChaseTarget();
+        }
+        else if(distanceToTarget <= navMeshAgent.stoppingDistance) {
+            AttackTarget();
+        } 
     }
 
+    void ChaseTarget() {
+        GetComponent<Animator>().SetBool("Idle",true);
+        GetComponent<Animator>().SetBool("Die",false);
+        GetComponent<Animator>().SetTrigger("Move");
+        
+        navMeshAgent.SetDestination(target.position);
+    }
+
+    void AttackTarget() {
+        GetComponent<Animator>().SetBool("Move", false);
+        GetComponent<Animator>().SetTrigger("Idle");
+    }
+
+    void FaceTarget() {
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
+    }
     
  
 }
